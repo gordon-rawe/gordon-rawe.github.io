@@ -1,0 +1,594 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="安卓,动画," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="概述今天开发遇到一个视觉需求，翻转一个logo用来强调入口，好吧，反正设计是就是喜欢炫的东西，作为开发来说，没的选咯，在google了一番以后，发现android developer官网有一个页面的切换动画，https://developer.android.com/training/animation/cardflip.html，好像有点意思，于是模仿者来了一发，做了一个FlipView。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="翻转卡片动画容器FlipView">
+<meta property="og:url" content="http://yoursite.com/2016/05/31/翻转硬币动画容器FlipView/index.html">
+<meta property="og:site_name" content="Gordon's Blog">
+<meta property="og:description" content="概述今天开发遇到一个视觉需求，翻转一个logo用来强调入口，好吧，反正设计是就是喜欢炫的东西，作为开发来说，没的选咯，在google了一番以后，发现android developer官网有一个页面的切换动画，https://developer.android.com/training/animation/cardflip.html，好像有点意思，于是模仿者来了一发，做了一个FlipView。">
+<meta property="og:updated_time" content="2016-08-04T03:17:41.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="翻转卡片动画容器FlipView">
+<meta name="twitter:description" content="概述今天开发遇到一个视觉需求，翻转一个logo用来强调入口，好吧，反正设计是就是喜欢炫的东西，作为开发来说，没的选咯，在google了一番以后，发现android developer官网有一个页面的切换动画，https://developer.android.com/training/animation/cardflip.html，好像有点意思，于是模仿者来了一发，做了一个FlipView。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+  <title> 翻转卡片动画容器FlipView | Gordon's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Gordon's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">still believe in that world can be reshaped by coding and we can benifit from it.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Blogs
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Timeline
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                翻转卡片动画容器FlipView
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-05-31T14:28:00+08:00" content="2016-05-31">
+              2016-05-31
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>今天开发遇到一个视觉需求，翻转一个logo用来强调入口，好吧，反正设计是就是喜欢炫的东西，作为开发来说，没的选咯，在google了一番以后，发现android developer官网有一个页面的切换动画，<a href="https://developer.android.com/training/animation/cardflip.html，好像有点意思，于是模仿者来了一发，做了一个FlipView。" target="_blank" rel="external">https://developer.android.com/training/animation/cardflip.html，好像有点意思，于是模仿者来了一发，做了一个FlipView。</a><a id="more"></a><br>无图无真相，把结果发出来再BB吧。<br><img src="" alt=""></p>
+<h4 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h4><p>其实主要是四个切换动画，两个用于顺时针翻转， 两个用于逆时针翻转。虽然我不喜欢贴代码，但是好像代码更加能说明哈，毕竟程序员都很聪明的。<br>在main/res/animator目录夹下面心间四个xml<br>首先是顺时针进入动画anim_in.xml<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">set</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--消失--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">objectAnimator</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"0"</span></span><br><span class="line">        <span class="attr">android:propertyName</span>=<span class="string">"alpha"</span></span><br><span class="line">        <span class="attr">android:valueFrom</span>=<span class="string">"1.0"</span></span><br><span class="line">        <span class="attr">android:valueTo</span>=<span class="string">"0.0"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--旋转--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">objectAnimator</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"@integer/card_flip_time_full"</span></span><br><span class="line">        <span class="attr">android:propertyName</span>=<span class="string">"rotationY"</span></span><br><span class="line">        <span class="attr">android:valueFrom</span>=<span class="string">"-180"</span></span><br><span class="line">        <span class="attr">android:valueTo</span>=<span class="string">"0"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--出现--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">objectAnimator</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"0"</span></span><br><span class="line">        <span class="attr">android:propertyName</span>=<span class="string">"alpha"</span></span><br><span class="line">        <span class="attr">android:startOffset</span>=<span class="string">"@integer/card_flip_time_half"</span></span><br><span class="line">        <span class="attr">android:valueFrom</span>=<span class="string">"0.0"</span></span><br><span class="line">        <span class="attr">android:valueTo</span>=<span class="string">"1.0"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">set</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>顺时针出动画anim_out.xml<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">set</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--旋转--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">objectAnimator</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"@integer/card_flip_time_full"</span></span><br><span class="line">        <span class="attr">android:propertyName</span>=<span class="string">"rotationY"</span></span><br><span class="line">        <span class="attr">android:valueFrom</span>=<span class="string">"0"</span></span><br><span class="line">        <span class="attr">android:valueTo</span>=<span class="string">"180"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--消失--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">objectAnimator</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"0"</span></span><br><span class="line">        <span class="attr">android:propertyName</span>=<span class="string">"alpha"</span></span><br><span class="line">        <span class="attr">android:startOffset</span>=<span class="string">"@integer/card_flip_time_half"</span></span><br><span class="line">        <span class="attr">android:valueFrom</span>=<span class="string">"1.0"</span></span><br><span class="line">        <span class="attr">android:valueTo</span>=<span class="string">"0.0"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">set</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>然后是逆时针进入动画anim_in_reverse.xml<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">set</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--消失--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">objectAnimator</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"0"</span></span><br><span class="line">        <span class="attr">android:propertyName</span>=<span class="string">"alpha"</span></span><br><span class="line">        <span class="attr">android:valueFrom</span>=<span class="string">"1.0"</span></span><br><span class="line">        <span class="attr">android:valueTo</span>=<span class="string">"0.0"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--旋转--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">objectAnimator</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"@integer/card_flip_time_full"</span></span><br><span class="line">        <span class="attr">android:propertyName</span>=<span class="string">"rotationY"</span></span><br><span class="line">        <span class="attr">android:valueFrom</span>=<span class="string">"0"</span></span><br><span class="line">        <span class="attr">android:valueTo</span>=<span class="string">"-180"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--出现--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">objectAnimator</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"0"</span></span><br><span class="line">        <span class="attr">android:propertyName</span>=<span class="string">"alpha"</span></span><br><span class="line">        <span class="attr">android:startOffset</span>=<span class="string">"@integer/card_flip_time_half"</span></span><br><span class="line">        <span class="attr">android:valueFrom</span>=<span class="string">"0.0"</span></span><br><span class="line">        <span class="attr">android:valueTo</span>=<span class="string">"1.0"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">set</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>逆时针出动画anim_out_reverse.xml<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">set</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--旋转--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">objectAnimator</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"@integer/card_flip_time_full"</span></span><br><span class="line">        <span class="attr">android:propertyName</span>=<span class="string">"rotationY"</span></span><br><span class="line">        <span class="attr">android:valueFrom</span>=<span class="string">"180"</span></span><br><span class="line">        <span class="attr">android:valueTo</span>=<span class="string">"0"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--消失--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">objectAnimator</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"0"</span></span><br><span class="line">        <span class="attr">android:propertyName</span>=<span class="string">"alpha"</span></span><br><span class="line">        <span class="attr">android:startOffset</span>=<span class="string">"@integer/card_flip_time_half"</span></span><br><span class="line">        <span class="attr">android:valueFrom</span>=<span class="string">"1.0"</span></span><br><span class="line">        <span class="attr">android:valueTo</span>=<span class="string">"0.0"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">set</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>代码拷贝完了，简单的来解释下吧，就拿顺时针的两个动画来看就行了，其实主要的就是将前面的一面进行rotationY旋转，然后在旋转到一半的时候进行隐藏，后面的一面刚好相反，先进行隐藏，然后反向旋转着出现。</p>
+<h4 id="AbstractFlipView"><a href="#AbstractFlipView" class="headerlink" title="AbstractFlipView"></a>AbstractFlipView</h4><p>考虑到前后两面会有不同的界面，不仅仅是简单的ImageView，那么决定写个抽象类好了，让继承者提供给我们两个翻转的类。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">protected abstract View getUpSideView();</span><br><span class="line"></span><br><span class="line">protected abstract View getDownSideView();</span><br></pre></td></tr></table></figure></p>
+<p>然后将其加到两个容器中去，布局如下:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">RelativeLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span><br><span class="line">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">RelativeLayout</span></span><br><span class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/up_side"</span></span><br><span class="line">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span><br><span class="line">        <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">RelativeLayout</span></span><br><span class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/down_side"</span></span><br><span class="line">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span><br><span class="line">        <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>核心的代码其实就是加载好动画，然后执行，下一次执行必须在上一次动画结束后才行。以顺时针为例：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 翻转卡片</span><br><span class="line">public void flipCardClockWise() &#123;</span><br><span class="line">    // 正面朝上</span><br><span class="line">    if (!isUpSide) &#123;</span><br><span class="line">        rightOutAnimator.setTarget(upSideContainer);</span><br><span class="line">        leftInAnimator.setTarget(downSideContainer);</span><br><span class="line">        rightOutAnimator.start();</span><br><span class="line">        leftInAnimator.start();</span><br><span class="line">        isUpSide = true;</span><br><span class="line">    &#125; else &#123; // 背面朝上</span><br><span class="line">        rightOutAnimator.setTarget(downSideContainer);</span><br><span class="line">        leftInAnimator.setTarget(upSideContainer);</span><br><span class="line">        rightOutAnimator.start();</span><br><span class="line">        leftInAnimator.start();</span><br><span class="line">        isUpSide = false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>好了，核心代码到此就结束了。</p>
+<h4 id="继承自AbstractView写一个例子"><a href="#继承自AbstractView写一个例子" class="headerlink" title="继承自AbstractView写一个例子"></a>继承自AbstractView写一个例子</h4><p>主要实现几个基本的接口：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">public class FlipView extends AbstractFlipView &#123;</span><br><span class="line"></span><br><span class="line">    public FlipView(Context context, AttributeSet attrs) &#123;</span><br><span class="line">        super(context, attrs);</span><br><span class="line">        setDirection(Direction.CLOCK_WISE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected View getUpSideView() &#123;</span><br><span class="line">        View oneSide = LayoutInflater.from(getContext()).inflate(R.layout.layout_one_side, this, false);</span><br><span class="line">        return oneSide;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected View getDownSideView() &#123;</span><br><span class="line">        View oneSide = LayoutInflater.from(getContext()).inflate(R.layout.layout_one_side, this, false);</span><br><span class="line">        return oneSide;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected int getUpSidePadding() &#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected int getDownSidePadding() &#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>以上就是一个例子。好了，在github上有我的一个简单的例子，大家可以参考下，笔者水平有限，大家凑合着看吧，github地址为：<a href="https://github.com/gordon-rawe/FlipView" target="_blank" rel="external">https://github.com/gordon-rawe/FlipView</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/安卓/" rel="tag">#安卓</a>
+          
+            <a href="/tags/动画/" rel="tag">#动画</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/31/Java反射，解剖对象那些事/" rel="next" title="Java反射，解剖对象那些事">
+                <i class="fa fa-chevron-left"></i> Java反射，解剖对象那些事
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/07/吸顶效果RecyclerView的实现/" rel="prev" title="吸顶效果RecyclerView的实现">
+                吸顶效果RecyclerView的实现 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Gordon Rawe" />
+          <p class="site-author-name" itemprop="name">Gordon Rawe</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">27</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现原理"><span class="nav-number">2.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AbstractFlipView"><span class="nav-number">3.</span> <span class="nav-text">AbstractFlipView</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#继承自AbstractView写一个例子"><span class="nav-number">4.</span> <span class="nav-text">继承自AbstractView写一个例子</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  &copy; Copyright All rights are reserved by 
+  <a href="https://github.com/gordon-rawe"><span class="author" itemprop="copyrightHolder">Gordon Rawe</span></a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

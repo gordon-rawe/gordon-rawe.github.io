@@ -1,0 +1,590 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="安卓,移动前端," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="概述Activity页面间的切换并不是很难的事情，但是对于页面的交互效果的提高的却是很有帮助的，适合在一些基类配置好进入和退出的动画，让所有的页面有一套比较好的交互。那么问题来了，如何在安卓里面配置Activity的进出动画呢？本文将给出答案。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Activity页面切换动画">
+<meta property="og:url" content="http://yoursite.com/2016/05/20/Activity页面切换动画/index.html">
+<meta property="og:site_name" content="Gordon's Blog">
+<meta property="og:description" content="概述Activity页面间的切换并不是很难的事情，但是对于页面的交互效果的提高的却是很有帮助的，适合在一些基类配置好进入和退出的动画，让所有的页面有一套比较好的交互。那么问题来了，如何在安卓里面配置Activity的进出动画呢？本文将给出答案。">
+<meta property="og:updated_time" content="2016-08-04T03:17:41.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Activity页面切换动画">
+<meta name="twitter:description" content="概述Activity页面间的切换并不是很难的事情，但是对于页面的交互效果的提高的却是很有帮助的，适合在一些基类配置好进入和退出的动画，让所有的页面有一套比较好的交互。那么问题来了，如何在安卓里面配置Activity的进出动画呢？本文将给出答案。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+  <title> Activity页面切换动画 | Gordon's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Gordon's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">still believe in that world can be reshaped by coding and we can benifit from it.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Blogs
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Timeline
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Activity页面切换动画
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-05-20T23:52:28+08:00" content="2016-05-20">
+              2016-05-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>Activity页面间的切换并不是很难的事情，但是对于页面的交互效果的提高的却是很有帮助的，适合在一些基类配置好进入和退出的动画，让所有的页面有一套比较好的交互。<br>那么问题来了，如何在安卓里面配置Activity的进出动画呢？本文将给出答案。<br><a id="more"></a></p>
+<h4 id="安卓进出动画配置步骤"><a href="#安卓进出动画配置步骤" class="headerlink" title="安卓进出动画配置步骤"></a>安卓进出动画配置步骤</h4><h5 id="建立基本的动画xml文件"><a href="#建立基本的动画xml文件" class="headerlink" title="建立基本的动画xml文件"></a>建立基本的动画xml文件</h5><h6 id="进入文件push-left-in-xml"><a href="#进入文件push-left-in-xml" class="headerlink" title="进入文件push_left_in.xml"></a>进入文件push_left_in.xml</h6><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">set</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">translate</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"300"</span></span><br><span class="line">        <span class="attr">android:fromXDelta</span>=<span class="string">"100%p"</span></span><br><span class="line">        <span class="attr">android:toXDelta</span>=<span class="string">"0"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">alpha</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"300"</span></span><br><span class="line">        <span class="attr">android:fromAlpha</span>=<span class="string">"0.0"</span></span><br><span class="line">        <span class="attr">android:toAlpha</span>=<span class="string">"1.0"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">set</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h6 id="退出文件push-left-out-xml"><a href="#退出文件push-left-out-xml" class="headerlink" title="退出文件push_left_out.xml"></a>退出文件push_left_out.xml</h6><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">set</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">translate</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"300"</span></span><br><span class="line">        <span class="attr">android:fromXDelta</span>=<span class="string">"0"</span></span><br><span class="line">        <span class="attr">android:toXDelta</span>=<span class="string">"-100%p"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">alpha</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"300"</span></span><br><span class="line">        <span class="attr">android:fromAlpha</span>=<span class="string">"1.0"</span></span><br><span class="line">        <span class="attr">android:toAlpha</span>=<span class="string">"0.0"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">set</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h6 id="activity退出的效果-zoom-enter-xml"><a href="#activity退出的效果-zoom-enter-xml" class="headerlink" title="activity退出的效果 zoom_enter.xml"></a>activity退出的效果 zoom_enter.xml</h6><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">set</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attr">android:interpolator</span>=<span class="string">"@android:anim/decelerate_interpolator"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">scale</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"@android:integer/config_mediumAnimTime"</span></span><br><span class="line">        <span class="attr">android:fromXScale</span>=<span class="string">"2.0"</span></span><br><span class="line">        <span class="attr">android:fromYScale</span>=<span class="string">"2.0"</span></span><br><span class="line">        <span class="attr">android:pivotX</span>=<span class="string">"50%p"</span></span><br><span class="line">        <span class="attr">android:pivotY</span>=<span class="string">"50%p"</span></span><br><span class="line">        <span class="attr">android:toXScale</span>=<span class="string">"1.0"</span></span><br><span class="line">        <span class="attr">android:toYScale</span>=<span class="string">"1.0"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">set</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h6 id="zoom-exit-xml"><a href="#zoom-exit-xml" class="headerlink" title="zoom_exit.xml"></a>zoom_exit.xml</h6><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">set</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attr">android:interpolator</span>=<span class="string">"@android:anim/decelerate_interpolator"</span></span><br><span class="line">    <span class="attr">android:zAdjustment</span>=<span class="string">"top"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">scale</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"@android:integer/config_mediumAnimTime"</span></span><br><span class="line">        <span class="attr">android:fromXScale</span>=<span class="string">"1.0"</span></span><br><span class="line">        <span class="attr">android:fromYScale</span>=<span class="string">"1.0"</span></span><br><span class="line">        <span class="attr">android:pivotX</span>=<span class="string">"50%p"</span></span><br><span class="line">        <span class="attr">android:pivotY</span>=<span class="string">"50%p"</span></span><br><span class="line">        <span class="attr">android:toXScale</span>=<span class="string">".5"</span></span><br><span class="line">        <span class="attr">android:toYScale</span>=<span class="string">".5"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">alpha</span></span><br><span class="line">        <span class="attr">android:duration</span>=<span class="string">"@android:integer/config_mediumAnimTime"</span></span><br><span class="line">        <span class="attr">android:fromAlpha</span>=<span class="string">"1.0"</span></span><br><span class="line">        <span class="attr">android:toAlpha</span>=<span class="string">"0"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">set</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h5 id="建立style文件"><a href="#建立style文件" class="headerlink" title="建立style文件"></a>建立style文件</h5><p>style 文件如下<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">"ThemeActivity"</span>&gt;</span><span class="xml"></span><br><span class="line">       <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android:windowAnimationStyle"</span>&gt;</span>@style/AnimationActivity<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android:windowNoTitle"</span>&gt;</span>true<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">   </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line">   <span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>=<span class="string">"AnimationActivity"</span> <span class="attr">parent</span>=<span class="string">"@android:style/Animation.Activity"</span>&gt;</span><span class="xml"></span><br><span class="line">       <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android:activityOpenEnterAnimation"</span>&gt;</span>@anim/push_left_in<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android:activityOpenExitAnimation"</span>&gt;</span>@anim/push_left_out<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android:activityCloseEnterAnimation"</span>&gt;</span>@anim/zoom_enter<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android:activityCloseExitAnimation"</span>&gt;</span>@anim/zoom_exit<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">   </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h5 id="在Application中调用主题"><a href="#在Application中调用主题" class="headerlink" title="在Application中调用主题"></a>在Application中调用主题</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">application</span> <span class="attr">Android:allowBackup</span>=<span class="string">"true"</span></span><br><span class="line">	<span class="attr">android:icon</span>=<span class="string">"@drawable/ic_launcher"</span></span><br><span class="line">	<span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></span><br><span class="line">	<span class="attr">android:theme</span>=<span class="string">"@style/ThemeActivity"</span> &gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h4><p>好了，到此就配置好了安卓的几本进出动画，还是那句话，app要牛逼，还是要把动画做好，但同时不能够太花哨，简单而不失大方，这就是最好的交互。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/安卓/" rel="tag">#安卓</a>
+          
+            <a href="/tags/移动前端/" rel="tag">#移动前端</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/20/ubuntu下环境变量的配置/" rel="next" title="ubuntu下环境变量的配置">
+                <i class="fa fa-chevron-left"></i> ubuntu下环境变量的配置
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/30/基于SurfaceView的loading动画/" rel="prev" title="基于SurfaceView的loading动画">
+                基于SurfaceView的loading动画 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Gordon Rawe" />
+          <p class="site-author-name" itemprop="name">Gordon Rawe</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">27</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安卓进出动画配置步骤"><span class="nav-number">2.</span> <span class="nav-text">安卓进出动画配置步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#建立基本的动画xml文件"><span class="nav-number">2.1.</span> <span class="nav-text">建立基本的动画xml文件</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#进入文件push-left-in-xml"><span class="nav-number">2.1.1.</span> <span class="nav-text">进入文件push_left_in.xml</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#退出文件push-left-out-xml"><span class="nav-number">2.1.2.</span> <span class="nav-text">退出文件push_left_out.xml</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#activity退出的效果-zoom-enter-xml"><span class="nav-number">2.1.3.</span> <span class="nav-text">activity退出的效果 zoom_enter.xml</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#zoom-exit-xml"><span class="nav-number">2.1.4.</span> <span class="nav-text">zoom_exit.xml</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#建立style文件"><span class="nav-number">2.2.</span> <span class="nav-text">建立style文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在Application中调用主题"><span class="nav-number">2.3.</span> <span class="nav-text">在Application中调用主题</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结束语"><span class="nav-number">3.</span> <span class="nav-text">结束语</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  &copy; Copyright All rights are reserved by 
+  <a href="https://github.com/gordon-rawe"><span class="author" itemprop="copyrightHolder">Gordon Rawe</span></a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
