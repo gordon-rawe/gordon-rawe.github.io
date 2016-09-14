@@ -1,0 +1,638 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Sans Serif:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="引言本文首先回顾一下安卓Fragment的基本概念、使用、通信和生命周期等，然后结合开发过程中遇到的坑，记录一下解决办法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fragment的使用与常见的坑">
+<meta property="og:url" content="http://yoursite.com/2016/09/11/Fragment的使用与常见的坑/index.html">
+<meta property="og:site_name" content="Gordon's Blog">
+<meta property="og:description" content="引言本文首先回顾一下安卓Fragment的基本概念、使用、通信和生命周期等，然后结合开发过程中遇到的坑，记录一下解决办法。">
+<meta property="og:image" content="http://yoursite.com/one.jpg">
+<meta property="og:image" content="http://yoursite.com/two.jpg">
+<meta property="og:image" content="http://yoursite.com/three.jpg">
+<meta property="og:image" content="http://yoursite.com/four.jpg">
+<meta property="og:updated_time" content="2016-09-12T02:28:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Fragment的使用与常见的坑">
+<meta name="twitter:description" content="引言本文首先回顾一下安卓Fragment的基本概念、使用、通信和生命周期等，然后结合开发过程中遇到的坑，记录一下解决办法。">
+<meta name="twitter:image" content="http://yoursite.com/one.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+  <title> Fragment的使用与常见的坑 | Gordon's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Gordon's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">still believe in that world can be reshaped by coding and we can benifit from it.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Blogs
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Timeline
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Fragment的使用与常见的坑
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-09-11T00:19:30+08:00" content="2016-09-11">
+              2016-09-11
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h4><p>本文首先回顾一下安卓Fragment的基本概念、使用、通信和生命周期等，然后结合开发过程中遇到的坑，记录一下解决办法。</p>
+<a id="more"></a>
+<h4 id="Fragment基本概念"><a href="#Fragment基本概念" class="headerlink" title="Fragment基本概念"></a>Fragment基本概念</h4><h5 id="Fragment的添加"><a href="#Fragment的添加" class="headerlink" title="Fragment的添加"></a>Fragment的添加</h5><p>方法一: 布局里的标签<br>标识符: tag, id, 如果都没有, container的id将会被使用. </p>
+<p>方法二: 动态添加<br>动态添加利用了一个transaction:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FragmentManager fragmentManager = getFragmentManager();</span><br><span class="line">       Fragment fragment = fragmentManager.findFragmentByTag(FragmentB.TAG);</span><br><span class="line">       <span class="keyword">if</span> (<span class="keyword">null</span> == fragment) &#123;</span><br><span class="line">           FragmentB fragmentB = <span class="keyword">new</span> FragmentB();</span><br><span class="line">           FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();</span><br><span class="line">           fragmentTransaction.add(R.id.fragment_container, fragmentB, FragmentB.TAG)</span><br><span class="line">                              .commit();</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure></p>
+<p>commit()方法并不立即执行transaction中包含的动作,而是把它加入到UI线程队列中.<br>如果想要立即执行,可以在commit之后立即调用FragmentManager的executePendingTransactions()方法.</p>
+<p>commit()方法必须在状态存储之前调用,否则会抛出异常,如果觉得状态丢失没关系,可以调用commitAllowingStateLoss(). 但是除非万不得已, 一般不推荐用这个方法, 会掩盖很多错误.</p>
+<h5 id="Back-Stack"><a href="#Back-Stack" class="headerlink" title="Back Stack"></a>Back Stack</h5><p>Activity的back stack: 系统维护, 每个task一个back stack.<br>Fragment的back stack: 宿主activity掌管, 每个activity一个.</p>
+<p>通过调用addToBackStack(),commit()的一系列转换作为一个transaction被存储在back stack中,<br>用户按Back键, 从栈中pop出一个transaction, 逆转操作, 可以返回上一个转换前的状态.</p>
+<p>一个transaction可以包含多种操作, 并且不局限于对同一个Fragment, 所以每一个transaction实际上可以是一系列对多个fragment的操作的组合.<br>加入到back stack中去的时候, 是把这一系列的组合作为一个原子, 加入到back stack中.</p>
+<h5 id="构造和参数传递"><a href="#构造和参数传递" class="headerlink" title="构造和参数传递"></a>构造和参数传递</h5><p>所有的Fragment都必须有一个public的无参构造函数, 因为framework经常会在需要的时候重新创建实例(状态恢复时), 它需要的就是这个构造.<br>如果无参构造没有提供,会有异常.</p>
+<p>所以不要给Fragment写有参数的构造函数, 也不要企图搞个什么单例的Fragment. 这些都是反设计的.</p>
+<p>参数传递的正确姿势:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> FragmentWithParameters <span class="title">newInstance</span><span class="params">(<span class="keyword">int</span> num)</span> </span>&#123;</span><br><span class="line">    FragmentWithParameters fragmentWithParameter = <span class="keyword">new</span> FragmentWithParameters();</span><br><span class="line">    Bundle args = <span class="keyword">new</span> Bundle();</span><br><span class="line">    args.putInt(NUM, num);</span><br><span class="line">    fragmentWithParameter.setArguments(args);</span><br><span class="line">    <span class="keyword">return</span> fragmentWithParameter;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    num = getArguments() != <span class="keyword">null</span> ? getArguments().getInt(NUM) : <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里是提供了一个静态方法, 也可以new出对象后自己set Bundle参数.</p>
+<h4 id="Fragment的通信"><a href="#Fragment的通信" class="headerlink" title="Fragment的通信"></a>Fragment的通信</h4><p>除了DialogFragment和嵌套Fragment需要与自己的parent fragment通信以外, 一般的fragment是不与其他fragment有任何通信的. 因为要求应尽量独立, 模块化, 可复用.<br>fragment与自己的parent activity (除了嵌套和dialog的情况外, 这个parent通常是activity) 有直接通信, 一般以这三种方式:</p>
+<p>在构造fragment的时候, 通过Bundle传递参数.<br>parent可以直接调用fragment的public方法, 这里也可以传递一些参数.<br>Listener, 也即parent实现的callback接口, fragment可以在自己内部调用, 这里fragment也可以传递参数出去.</p>
+<h4 id="Fragment的生命周期"><a href="#Fragment的生命周期" class="headerlink" title="Fragment的生命周期"></a>Fragment的生命周期</h4><p>Fragment的生命周期首先和Activity的生命周期密切相关,<br>如果activity stopped,其中所有的fragment都不能start;<br>如果activity destroyed, 其中所有的fragment都会被destroyed.<br>只有activity在resumed状态下,fragment的生命周期可以独立改变,否则它被activity控制.</p>
+<center><img src="one.jpg" alt=""></center>
+
+<center><img src="two.jpg" alt=""></center>
+
+<center><img src="three.jpg" alt=""></center>
+
+<center><img src="four.jpg" alt=""></center>
+
+<h4 id="FragmentTransaction基础操作"><a href="#FragmentTransaction基础操作" class="headerlink" title="FragmentTransaction基础操作"></a>FragmentTransaction基础操作</h4><p>FragmentTransaction 中对Fragment有如下几种操作:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">attach(), detach()</span><br><span class="line">add(), remove(),</span><br><span class="line">show(), hide(),</span><br><span class="line">replace()</span><br></pre></td></tr></table></figure></p>
+<p>除了replace()以外其他都是成对的.</p>
+<p>其中attach()和detach()不是很常用.<br>调用detach()之后, fragment实际的生命周期会走到onDestroyView(), 但不会走onDestroy()和onDetach(), 也即fragment本身并没有被销毁, 只是view被销毁了. 这和addToBackStack()的情况一样, 尽管调用detach()的时候没有addToBackStack(), 仍然只是走到view被销毁的阶段.</p>
+<p>add()和remove()是将fragment添加和移除.<br>remove()比detach()要彻底一些, 如果不加入到back stack, remove()的时候, fragment的生命周期会一直走到onDetach().</p>
+<p>show()和hide()是用来设置fragment的显示和隐藏状态, 这两个方法并不对应fragment的状态变化,只是将view设置为visible和gone,然后调用onHiddenChanged()的回调.</p>
+<p>实际上replace() == remove() + add(), 所以它的反操作也是replace(), 只不过把add和remove的东西交换一下.</p>
+<p>关于replace()和show(), hide()的选择, 要根据实际使用情形来定.<br>replace()的好处是会减少内存占用, 但是返回时需要重新走完初始化的过程.<br>show()和hide()只是控制了fragment的显示和隐藏, 不会改变生命周期状态, 也即fragment始终是处于running状态的, 被保持在内存中, 适用于频繁切换的情形.</p>
+<h5 id="remove-replace-是否加到back-stack对生命周期的影响"><a href="#remove-replace-是否加到back-stack对生命周期的影响" class="headerlink" title="remove(), replace()是否加到back stack对生命周期的影响"></a>remove(), replace()是否加到back stack对生命周期的影响</h5><p>前面说过, replace() == remove() + add()<br>新的fragment将取代在容器布局中的fragment, 如果没有,将直接添加新的fragment.</p>
+<p>是否添加到back stack对fragment的生命周期是有影响的.<br>remove()或者replace()的时候,如果commit()之前没有调用addToBackStack(),那个旧fragment将会被destroyed和detach; 即完全销毁和移除.</p>
+<p>如果调用了addToBackStack(),旧的fragment会处在stopped状态,调用到onDestroyView(), 可以通过返回键来resume.<br>这个时候对于旧的Fragment来说, 成员变量依然在,但是View被销毁了. 所以返回时它的生命周期从onCreateView()开始重建View.</p>
+<h4 id="Fragment的坑"><a href="#Fragment的坑" class="headerlink" title="Fragment的坑"></a>Fragment的坑</h4><h5 id="嵌套Fragment的使用及常见错误"><a href="#嵌套Fragment的使用及常见错误" class="headerlink" title="嵌套Fragment的使用及常见错误"></a>嵌套Fragment的使用及常见错误</h5><p>嵌套Fragments (Nested Fragments), 是在Fragment内部又添加Fragment.<br>使用时, 主要要依靠宿主Fragment的 getChildFragmentManager() 来获取FragmentManger.<br>虽然看起来和在activity中添加fragment差不多, 但因为fragment生命周期及管理恢复模式不同, 其中有一些需要特别注意的地方.<br>本文内容还包括了从Fragment迁移到v4.Fragment代码中需要改动的一些地方.</p>
+<h5 id="嵌套Fragments"><a href="#嵌套Fragments" class="headerlink" title="嵌套Fragments"></a>嵌套Fragments</h5><p>嵌套Fragments Nested Fragments 是Android 4.2 API 17 引入的.<br>目的: 进一步增强动态复用.<br>如果要在Android 4.2之前使用, 可以用support library v4的版本, 后面会有详细的迁移过程介绍.</p>
+<h5 id="嵌套Fragment的动态添加"><a href="#嵌套Fragment的动态添加" class="headerlink" title="嵌套Fragment的动态添加"></a>嵌套Fragment的动态添加</h5><p>在宿主fragment里调用getChildFragmentManager()<br>即可用它来向这个fragment内部添加fragments.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Fragment videoFragment = <span class="keyword">new</span> VideoPlayerFragment();</span><br><span class="line">FragmentTransaction transaction = getChildFragmentManager().beginTransaction();</span><br><span class="line">transaction.add(R.id.video_fragment, videoFragment).commit();</span><br></pre></td></tr></table></figure></p>
+<p>同样, 对于内部的fragment来说, getParentFragment() 方法可以获取到fragment的宿主fragment.</p>
+<h5 id="getChildFragmentManager-和-getFragmentManager"><a href="#getChildFragmentManager-和-getFragmentManager" class="headerlink" title="getChildFragmentManager() 和 getFragmentManager()"></a>getChildFragmentManager() 和 getFragmentManager()</h5><p>getChildFragmentManager()是fragment中的方法, 返回的是管理当前fragment内部子fragments的manager.<br>getFragmentManager()在activity和fragment中都有.<br>在activity中, 如果用的是v4 support库, 方法应该用getSupportFragmentManager(), 返回的是管理activity中fragments的manager.<br>在fragment中, 还叫getFragmentManager(), 返回的是把自己加进来的那个manager.</p>
+<p>也即, 如果fragment在activity中, fragment.getFragmentManager()得到的是activity中管理fragments的那个manager.<br>如果fragment是嵌套在另一个fragment中, fragment.getFragmentManager()得到的是它的parent的getChildFragmentManager().<br>总结就是: getFragmentManager()是本级别管理者, getChildFragmentManager()是下一级别管理者.<br>这实际上是一个树形管理结构.</p>
+<h4 id="嵌套Fragment使用常见错误"><a href="#嵌套Fragment使用常见错误" class="headerlink" title="嵌套Fragment使用常见错误"></a>嵌套Fragment使用常见错误</h4><h5 id="错误情形1-把嵌套Fragment放在布局里"><a href="#错误情形1-把嵌套Fragment放在布局里" class="headerlink" title="错误情形1: 把嵌套Fragment放在布局里"></a>错误情形1: 把嵌套Fragment放在布局里</h5><p>把嵌套Fragment放在布局里 -&gt; InflateException in Binary XML</p>
+<p>看起来嵌套fragment的使用除了要用getChildFragmentManager()以外, 其他跟之前似乎没什么区别.<br>如果嵌套的fragment不需要太多控制, 固定地占据了一块地方, 你可能想当然地为了省事就把它放进了xml布局文件里, 写个标签.<br>运行一下初看起来似乎没什么错, run一下也能显示出来, 但是千万不要这样做, 多玩两下更复杂的你就知道了.</p>
+<p>上面官网介绍时就有这么一句:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Note: You cannot inflate a layout into a fragment when that layout includes a .</span><br><span class="line">Nested fragments are only supported when added to a fragment dynamically.</span><br></pre></td></tr></table></figure></p>
+<p>人家这么说肯定是有原因的哇, 下面我来告诉你我知道的问题:<br>如果Fragment被嵌套写在了布局里, inflate到这个标签的时候就相当于将它加进了FragmentManager里.<br>如果嵌套的parent fragment因为需要重建View而重新走了onCreateView()方法, 再次inflate, 此时就会抛出异常:  InflateException in Binary XML</p>
+<p>之前为什么可以呢? 非嵌套的情况, fragment直接加在activity里, 如果需要重新inflate, 必定是在onCreate()里, activity是重新建的, 所以没有问题, 因为不存在fragmentManager中已经持有同一个fragment的问题.</p>
+<p>举一个例子:<br>在嵌套的情况下, 如果FragmentE布局里有FragmentA, 这时候我们需要叠加一个FragmentD.<br>用了replace(), 并且addToBackStack().<br>当D显示的时候, E实际上View是被销毁的, 然后back回来, 重建View, 即FragementE需要重新从onCreateView<br>()开始走生命周期, 走到inflate的时候又看到了fragmentA的标签.<br>但是这时候A实际上还在FragmentManager里面, 所以就会抛出如下的异常:<br>android.view.InflateException: Binary XML file line # XX: Binary XML file line #XX: Error inflating class fragment<br>崩溃的位置就在parent fragment(FragmentE) inflate的时候.<br>打印具体的异常栈信息可以看到:<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">at android.app.Fragment.performCreateView(Fragment.java:2220)</span><br><span class="line">at android.app.FragmentManagerImpl.moveToState(FragmentManager.java:973)</span><br><span class="line">at android.app.FragmentManagerImpl.moveToState(FragmentManager.java:1148)</span><br><span class="line">at android.app.FragmentManagerImpl.popBackStackState(FragmentManager.java:1587)</span><br><span class="line">at android.app.FragmentManagerImpl.popBackStackImmediate(FragmentManager.java:578)</span><br><span class="line">at android.support.v4.app.BaseFragmentActivityEclair.onBackPressedNotHandled(BaseFragmentActivityEclair.java:27)</span><br><span class="line">at android.support.v4.app.FragmentActivity.onBackPressed(FragmentActivity.java:189)</span><br><span class="line"> Caused by: java.lang.IllegalArgumentException: Binary XML file line #16: Duplicate id 0x7f0c0059, tag null, or parent id 0xffffffff with another fragment for com.example.ddmeng.helloactivityandfragment.fragment.FragmentA</span><br><span class="line">at android.app.FragmentManagerImpl.onCreateView(FragmentManager.java:2205)</span><br></pre></td></tr></table></figure></p>
+<h5 id="Solution-1-动态添加child-fragment"><a href="#Solution-1-动态添加child-fragment" class="headerlink" title="Solution 1: 动态添加child fragment"></a>Solution 1: 动态添加child fragment</h5><p>解决上面的问题有各种方法, 最常规的做法是, 使用动态添加:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Fragment fragmentA = getChildFragmentManager().findFragmentByTag(NESTED_FRAGMENT_TAG);</span><br><span class="line"><span class="keyword">if</span> (fragmentA == <span class="keyword">null</span>) &#123;</span><br><span class="line">    Log.i(LOG_TAG, <span class="string">"add new FragmentA !!"</span>);</span><br><span class="line">    fragmentA = <span class="keyword">new</span> FragmentA();</span><br><span class="line">    FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();</span><br><span class="line">    fragmentTransaction.add(R.id.fragment_container, fragmentA, NESTED_FRAGMENT_TAG).commit();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    Log.i(LOG_TAG, <span class="string">"found existing FragmentA, no need to add it again !!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h5 id="Solution-2-在异常之前remove-child-fragment"><a href="#Solution-2-在异常之前remove-child-fragment" class="headerlink" title="Solution 2: 在异常之前remove child fragment"></a>Solution 2: 在异常之前remove child fragment</h5><p>如果你的子fragment非要加在布局里不可, 而你的程序确实会有重建父fragment view的情形.<br>为了避免上面的异常, 你也可以这样做(tricky and not recommended):</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeChildFragment</span><span class="params">(Fragment parentFragment)</span> </span>&#123;</span><br><span class="line">    FragmentManager fragmentManager = parentFragment.getChildFragmentManager();</span><br><span class="line">    Fragment child = fragmentManager.findFragmentById(R.id.child);</span><br><span class="line">    <span class="keyword">if</span> (child != <span class="keyword">null</span>) &#123;</span><br><span class="line">        fragmentManager.beginTransaction()</span><br><span class="line">        .remove(child)</span><br><span class="line">        .commitAllowingStateLoss();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在parentFragment的onCreateView()方法中inflate之前和onSaveInstanceState()方法中做save工作之前调用它.<br>这两个地方是发生异常的地方, 只要在其之前remove就好.</p>
+<h5 id="错误情形2-把fragment放在一个动态布局里"><a href="#错误情形2-把fragment放在一个动态布局里" class="headerlink" title="错误情形2: 把fragment放在一个动态布局里"></a>错误情形2: 把fragment放在一个动态布局里</h5><p>把fragment放在一个动态布局里 -&gt; java.lang.IllegalArgumentException: No view found for id</p>
+<p>发现这个错误是因为项目中的一个子Fragment是添加在RecyclerView里面的一块的.<br>RecyclerView要等到Loader的数据取到了之后再populate每一块的布局.<br>还是上面的流程, 启动父fragment, load数据, 添加子fragment, 这都没有问题.<br>但是一旦如果是上面的replace()加addToBackStack() , 并且再次返回, 就会出现异常.<br>因为当重建View的时候, fragmentManager其中是持有child fragment的, 但是找不到它的container, 于是就会抛出异常.<br>在Fragment F中, 先添加一个FrameLayout, 再把child fragment A加进去.<br>然后在Activity中, 用D replace F, 按back键返回, 就会有crash.<br>这是因为返回的时候FragmentManager找不到对应的container了.<br>所以应该避免这种做法, 尽量把fragment加进parent的根布局里, 而不是某个动态添加的布局.</p>
+<h4 id="Fragment与ViewPager的结合"><a href="#Fragment与ViewPager的结合" class="headerlink" title="Fragment与ViewPager的结合"></a>Fragment与ViewPager的结合</h4>
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag">#Java</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/10/源码角度捋一捋LinkedList/" rel="next" title="源码角度捋一捋LinkedList">
+                <i class="fa fa-chevron-left"></i> 源码角度捋一捋LinkedList
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/12/写一个ContentProvider的实用案例/" rel="prev" title="写一个ContentProvider的实用案例">
+                写一个ContentProvider的实用案例 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Gordon Rawe" />
+          <p class="site-author-name" itemprop="name">Gordon Rawe</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">37</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Fragment基本概念"><span class="nav-number">2.</span> <span class="nav-text">Fragment基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Fragment的添加"><span class="nav-number">2.1.</span> <span class="nav-text">Fragment的添加</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Back-Stack"><span class="nav-number">2.2.</span> <span class="nav-text">Back Stack</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#构造和参数传递"><span class="nav-number">2.3.</span> <span class="nav-text">构造和参数传递</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Fragment的通信"><span class="nav-number">3.</span> <span class="nav-text">Fragment的通信</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Fragment的生命周期"><span class="nav-number">4.</span> <span class="nav-text">Fragment的生命周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FragmentTransaction基础操作"><span class="nav-number">5.</span> <span class="nav-text">FragmentTransaction基础操作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#remove-replace-是否加到back-stack对生命周期的影响"><span class="nav-number">5.1.</span> <span class="nav-text">remove(), replace()是否加到back stack对生命周期的影响</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Fragment的坑"><span class="nav-number">6.</span> <span class="nav-text">Fragment的坑</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#嵌套Fragment的使用及常见错误"><span class="nav-number">6.1.</span> <span class="nav-text">嵌套Fragment的使用及常见错误</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#嵌套Fragments"><span class="nav-number">6.2.</span> <span class="nav-text">嵌套Fragments</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#嵌套Fragment的动态添加"><span class="nav-number">6.3.</span> <span class="nav-text">嵌套Fragment的动态添加</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#getChildFragmentManager-和-getFragmentManager"><span class="nav-number">6.4.</span> <span class="nav-text">getChildFragmentManager() 和 getFragmentManager()</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#嵌套Fragment使用常见错误"><span class="nav-number">7.</span> <span class="nav-text">嵌套Fragment使用常见错误</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#错误情形1-把嵌套Fragment放在布局里"><span class="nav-number">7.1.</span> <span class="nav-text">错误情形1: 把嵌套Fragment放在布局里</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Solution-1-动态添加child-fragment"><span class="nav-number">7.2.</span> <span class="nav-text">Solution 1: 动态添加child fragment</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Solution-2-在异常之前remove-child-fragment"><span class="nav-number">7.3.</span> <span class="nav-text">Solution 2: 在异常之前remove child fragment</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#错误情形2-把fragment放在一个动态布局里"><span class="nav-number">7.4.</span> <span class="nav-text">错误情形2: 把fragment放在一个动态布局里</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Fragment与ViewPager的结合"><span class="nav-number">8.</span> <span class="nav-text">Fragment与ViewPager的结合</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  &copy; Copyright All rights are reserved by 
+  <a href="https://github.com/gordon-rawe"><span class="author" itemprop="copyrightHolder">Gordon Rawe</span></a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

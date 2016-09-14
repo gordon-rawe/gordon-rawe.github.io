@@ -55,7 +55,7 @@
   
     
     
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Sans Serif:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
   
 
 
@@ -253,8 +253,8 @@
             
               
                 
-                <a class="post-title-link" href="/2014/11/28/将一个字符串不使用额外容器向左移动M位/" itemprop="url">
-                  将一个字符串不使用额外容器向左移动M位
+                <a class="post-title-link" href="/2015/02/05/压缩字符串如aaabbbcccc为a3b3c4/" itemprop="url">
+                  压缩字符串如aaabbbcccc为a3b3c4
                 </a>
               
             
@@ -267,8 +267,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2014-11-28T12:46:56+08:00" content="2014-11-28">
-              2014-11-28
+            <time itemprop="dateCreated" datetime="2015-02-05T17:51:05+08:00" content="2015-02-05">
+              2015-02-05
             </time>
           </span>
 
@@ -315,9 +315,9 @@
 
       
         
-          <p>如题，好了不说了，直接上代码吧，主要的要求就是在原位操作，不能开辟新的空间
+          <p>如题，好像不是很难，把一串字符串进行压缩，可是要考虑效率哦。
           <div class="post-more-link text-center">
-            <a class="btn" href="/2014/11/28/将一个字符串不使用额外容器向左移动M位/#more" rel="contents">
+            <a class="btn" href="/2015/02/05/压缩字符串如aaabbbcccc为a3b3c4/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -368,8 +368,8 @@
             
               
                 
-                <a class="post-title-link" href="/2014/11/24/建树、前序、中序、后序遍历Java版/" itemprop="url">
-                  建树、前序、中序、后序遍历Java版
+                <a class="post-title-link" href="/2015/02/01/关于Fibonacci数的效率的考虑/" itemprop="url">
+                  关于Fibonacci数的效率的考虑
                 </a>
               
             
@@ -382,8 +382,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2014-11-24T17:59:56+08:00" content="2014-11-24">
-              2014-11-24
+            <time itemprop="dateCreated" datetime="2015-02-01T17:51:05+08:00" content="2015-02-01">
+              2015-02-01
             </time>
           </span>
 
@@ -430,9 +430,10 @@
 
       
         
-          <p>如题，建树、前序、中序、后序遍历是常见的算法问题，据说大牛到Google面试被要求反转二叉树没成功，当即被说you suck了，那么赶紧看看这个不至于以后被骂了。
+          <p>很容易就可以得到递推公式的斐波那契数列的递归解法，但是又没有考虑过，递归虽然酷，但是效率呢？<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">RecursiveFib</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(n==<span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">if</span>(n==<span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">return</span> RecursiveFib(n<span class="number">-1</span>)+RecursiveFib(n<span class="number">-2</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样的函数会调用巨多次，你会发现算到100根本就算不动了！于是是不是应该记下之前算过的解呢，那么每个N对应的Fib数是一定的，我们可以采用键值对的方式储存，那么这样子，就不会干重复的事情了，这也相当于我们手算时的思路!<br>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2014/11/24/建树、前序、中序、后序遍历Java版/#more" rel="contents">
+            <a class="btn" href="/2015/02/01/关于Fibonacci数的效率的考虑/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -483,8 +484,8 @@
             
               
                 
-                <a class="post-title-link" href="/2014/11/22/找出2N-1个两两配对数中落单那个/" itemprop="url">
-                  找出2N+1个两两配对数中落单那个
+                <a class="post-title-link" href="/2015/01/20/找出N个数中最小的K个数/" itemprop="url">
+                  找出N个数中最小的K个数
                 </a>
               
             
@@ -497,8 +498,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2014-11-22T17:53:58+08:00" content="2014-11-22">
-              2014-11-22
+            <time itemprop="dateCreated" datetime="2015-01-20T17:51:05+08:00" content="2015-01-20">
+              2015-01-20
             </time>
           </span>
 
@@ -545,9 +546,9 @@
 
       
         
-          <p>如题，找出2N+1个两两配对数中落单那个，对于这个问题,最暴力的求解方法是采用遍历的操作,然后全部进行,以下方法使用了一个辅助类,其原理是一个智能容器,当插入元素的时候判断集合中是否已经有了该元素,没有就添加,有的话就删除
+          <p>各种排序算法都会要开辟N个空间来接收输入，而以上代码的方法只开辟了K的大小的空间，不断的建堆，因为堆的数据结构可以可以O(1)直接找到最小值，所以不用每次都比较。
           <div class="post-more-link text-center">
-            <a class="btn" href="/2014/11/22/找出2N-1个两两配对数中落单那个/#more" rel="contents">
+            <a class="btn" href="/2015/01/20/找出N个数中最小的K个数/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -598,8 +599,8 @@
             
               
                 
-                <a class="post-title-link" href="/2014/11/18/查找单链表的倒数第k个节点/" itemprop="url">
-                  查找单链表的倒数第k个节点
+                <a class="post-title-link" href="/2015/01/15/判断一字符串是不是对称的/" itemprop="url">
+                  判断一字符串是不是对称的
                 </a>
               
             
@@ -612,8 +613,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2014-11-18T17:53:58+08:00" content="2014-11-18">
-              2014-11-18
+            <time itemprop="dateCreated" datetime="2015-01-15T17:51:05+08:00" content="2015-01-15">
+              2015-01-15
             </time>
           </span>
 
@@ -660,9 +661,9 @@
 
       
         
-          <p>这道题考察了边界条件，首先得判断链表的长度得小于或者等于k，然后按照先将一个指针移动到k-1的位置，再用一指针指向头部和它一起移动，直到第一个指针到底，这样时间复杂度为O(N)
+          <p>题目非常简单，如题所示，直接上代码吧，其他的都省略了。
           <div class="post-more-link text-center">
-            <a class="btn" href="/2014/11/18/查找单链表的倒数第k个节点/#more" rel="contents">
+            <a class="btn" href="/2015/01/15/判断一字符串是不是对称的/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -713,8 +714,8 @@
             
               
                 
-                <a class="post-title-link" href="/2014/11/14/求一串彩色珠子中包含所有颜色最短的一串长度/" itemprop="url">
-                  求一串彩色珠子中包含所有颜色最短的一串长度
+                <a class="post-title-link" href="/2015/01/10/基本的排序算法-选择、插入、冒泡、希尔、归并、堆、快速/" itemprop="url">
+                  基本的排序算法-选择、插入、冒泡、希尔、归并、堆、快速
                 </a>
               
             
@@ -727,8 +728,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2014-11-14T17:57:49+08:00" content="2014-11-14">
-              2014-11-14
+            <time itemprop="dateCreated" datetime="2015-01-10T18:23:21+08:00" content="2015-01-10">
+              2015-01-10
             </time>
           </span>
 
@@ -775,9 +776,9 @@
 
       
         
-          <p>以[1,2,2,1,1,3,0,0,2,2,3,2,3]为例子<br>最简单的是暴力破解法，两个循环，这肯定被鄙视的，在参考了网上的一些想法后，自己写了个Java版本的，主要思想为<br>第一步：使用两个指针，一开始都指向头节点。<br>第二步：指针一往后移动，在范围内，当包含了所有颜色的时候，停下来。<br>第三步：指针二往后移动，在范围内，移动的过程中判断是否包含所有颜色，当不包含的时候停下来。
+          <p>如题，排序算法是尝尝会被问及的，那么记录下来方便以后访问吧！<br>先定义个数组，然后写好交换和显示所有元素的函数。
           <div class="post-more-link text-center">
-            <a class="btn" href="/2014/11/14/求一串彩色珠子中包含所有颜色最短的一串长度/#more" rel="contents">
+            <a class="btn" href="/2015/01/10/基本的排序算法-选择、插入、冒泡、希尔、归并、堆、快速/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -828,8 +829,8 @@
             
               
                 
-                <a class="post-title-link" href="/2014/11/12/移动星号/" itemprop="url">
-                  移动星号
+                <a class="post-title-link" href="/2014/12/29/判断两个链表是否相交并且返回第一个交点/" itemprop="url">
+                  判断两个链表是否相交并且返回第一个交点
                 </a>
               
             
@@ -842,8 +843,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2014-11-12T17:57:49+08:00" content="2014-11-12">
-              2014-11-12
+            <time itemprop="dateCreated" datetime="2014-12-29T17:51:05+08:00" content="2014-12-29">
+              2014-12-29
             </time>
           </span>
 
@@ -890,9 +891,9 @@
 
       
         
-          <p>要求字符串为<em>号和26个字母的任意组合把</em>号都移动到最右侧，把字母移到最右侧并保持相对顺序不变。
+          <p>如题，判断两个链表是否相交并且返回第一个交点，主要的考点在于两个链表交叉后，以后的部分都是一样的，只可能是Y型的交叉而不可能出现X型的交叉
           <div class="post-more-link text-center">
-            <a class="btn" href="/2014/11/12/移动星号/#more" rel="contents">
+            <a class="btn" href="/2014/12/29/判断两个链表是否相交并且返回第一个交点/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -943,8 +944,8 @@
             
               
                 
-                <a class="post-title-link" href="/2014/11/07/递归求解二叉树的深度/" itemprop="url">
-                  递归求解二叉树的深度
+                <a class="post-title-link" href="/2014/12/20/判断单链表是否有环，若有请找出入口/" itemprop="url">
+                  判断单链表是否有环，若有请找出入口
                 </a>
               
             
@@ -957,8 +958,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2014-11-07T17:57:49+08:00" content="2014-11-07">
-              2014-11-07
+            <time itemprop="dateCreated" datetime="2014-12-20T12:46:56+08:00" content="2014-12-20">
+              2014-12-20
             </time>
           </span>
 
@@ -1005,9 +1006,354 @@
 
       
         
-          <p>如题，递归求解二叉树的深度，又是一个入门级的问题，可是常常会忘掉哦。<br>
+          <p>如题，判断单链表是否有环，若有请找出入口。这道题其实是一道脑经急转弯性质的题目，暴力去做是有的，可是要效率哦。
           <div class="post-more-link text-center">
-            <a class="btn" href="/2014/11/07/递归求解二叉树的深度/#more" rel="contents">
+            <a class="btn" href="/2014/12/20/判断单链表是否有环，若有请找出入口/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2014/12/08/匹配两个字符串的最大子串/" itemprop="url">
+                  匹配两个字符串的最大子串
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2014-12-08T12:46:56+08:00" content="2014-12-08">
+              2014-12-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>今天去远景能源面试,考官让我写一个计算两个字符串最大共有字符串的算法,当时写的有点low,使用了Java的contains方法,不断从找寻第二个字符串的子串进行配对,考官勉强给我通过,后面回来自己重写了一下,避免了contains函数,
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2014/12/08/匹配两个字符串的最大子串/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2014/12/03/反转单链表/" itemprop="url">
+                  反转单链表
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2014-12-03T18:04:04+08:00" content="2014-12-03">
+              2014-12-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>如题，入门级算法，来一发吧，回来再写一遍吧，基本思路就是倒转指针，用一个辅助指针先记录下来后驱，总共需要三个辅助指针
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2014/12/03/反转单链表/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2014/11/29/实现c-的字符串拷贝函数/" itemprop="url">
+                  实现c++的字符串拷贝函数
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2014-11-29T18:04:04+08:00" content="2014-11-29">
+              2014-11-29
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>如题，实现拷贝函数char<em> strcpy(char</em> dest,const char* src);这个问题并不难，但是容易忽视掉一些细节。
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2014/11/29/实现c-的字符串拷贝函数/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1041,7 +1387,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1082,7 +1428,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">27</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -1099,7 +1445,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
