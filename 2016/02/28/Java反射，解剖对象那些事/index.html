@@ -1,0 +1,595 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Sans Serif:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java,安卓编程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="概述为什么要写关于Java反射反面的博客呢，原因背景是这样的，最近我们team在使用retrofit做数据请求和解析，但是如果服务端返回的数据不包含某些数据的时候，解析出来的数据为null，就算在定义的时候，给model对象进行了一次最初的赋值也不行，原因在于解析的时候，没有数据的字段被retrofit解析成了null，这下可好了，调用这些模型的null字段就会跪掉，好了，测试bug来了，于是针对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java反射，解剖对象那些事">
+<meta property="og:url" content="http://yoursite.com/2016/02/28/Java反射，解剖对象那些事/index.html">
+<meta property="og:site_name" content="Gordon's Blog">
+<meta property="og:description" content="概述为什么要写关于Java反射反面的博客呢，原因背景是这样的，最近我们team在使用retrofit做数据请求和解析，但是如果服务端返回的数据不包含某些数据的时候，解析出来的数据为null，就算在定义的时候，给model对象进行了一次最初的赋值也不行，原因在于解析的时候，没有数据的字段被retrofit解析成了null，这下可好了，调用这些模型的null字段就会跪掉，好了，测试bug来了，于是针对">
+<meta property="og:updated_time" content="2016-09-19T02:41:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java反射，解剖对象那些事">
+<meta name="twitter:description" content="概述为什么要写关于Java反射反面的博客呢，原因背景是这样的，最近我们team在使用retrofit做数据请求和解析，但是如果服务端返回的数据不包含某些数据的时候，解析出来的数据为null，就算在定义的时候，给model对象进行了一次最初的赋值也不行，原因在于解析的时候，没有数据的字段被retrofit解析成了null，这下可好了，调用这些模型的null字段就会跪掉，好了，测试bug来了，于是针对">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+  <title> Java反射，解剖对象那些事 | Gordon's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Gordon's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">still believe in that world can be reshaped by coding and we can benifit from it.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Blogs
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Timeline
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java反射，解剖对象那些事
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-02-28T10:03:36+08:00" content="2016-02-28">
+              2016-02-28
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>为什么要写关于Java反射反面的博客呢，原因背景是这样的，最近我们team在使用retrofit做数据请求和解析，但是如果服务端返回的数据不包含某些数据的时候，解析出来的数据为null，就算在定义的时候，给model对象进行了一次最初的赋值也不行，原因在于解析的时候，没有数据的字段被retrofit解析成了null，这下可好了，调用这些模型的null字段就会跪掉，好了，测试bug来了，于是针对这个问题，我们程序狗们得着手解决啦。最直接最傻逼的做法当然就是去挨着每个字断去判断咯，但是我操，这个数据多的一逼，不瞒大家说，考虑到风险的问题，我们还真的这么干了，至少能够解决问题，我们处理这个事情的同事要吐血了，哈哈。现在过了发布，准备重构一下，那么我想到了两个办法去解决这个问题，得治标治本，从源头下手，有两个办法，一个是将恢复出来的模型进行解剖，如果发现字断为null的就赋值为空字符串，另一个办法是从解析入手，覆盖retrofit的解析方法，自定义解析规则，一个一个的来吧，首先从解剖入手呗，于是又了今天这篇博客。<a id="more"></a></p>
+<h4 id="Java反射基础"><a href="#Java反射基础" class="headerlink" title="Java反射基础"></a>Java反射基础</h4><p>先来看看反射的定义吧：JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法和属性；这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。<br>为了解决问题去学习是最好的学习方法。问题放在这里，但是发现对发射不熟悉怎么办呢，OK，google一下，找到oracle官网，先来看一番吧，照抄翻译网页的事咱就不干了，摘抄点精华吧。</p>
+<h4 id="Java-Reflction可操纵成员Members"><a href="#Java-Reflction可操纵成员Members" class="headerlink" title="Java Reflction可操纵成员Members"></a>Java Reflction可操纵成员Members</h4><p>官网看到了Members包括：Fields、Methods和Constructors，其实也就是包含了最基本的一个对象的组成成分了。</p>
+<h5 id="Fields"><a href="#Fields" class="headerlink" title="Fields"></a>Fields</h5><p>获取Field的类型，一个属性可以是基本数据类型，也可以是引用类型，最基本的八种数据类型分别是boolean,byte,short,int,long,char,float和double，一个引用类型或者都直接或者间接继承自Object，或者是接口interface，或者是数组Array，或者是列表List或枚举等。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;?&gt; clazz = Class.forName(<span class="string">"full path class name"</span>);</span><br><span class="line">Class&lt;?&gt; clazz = object.getClass();</span><br></pre></td></tr></table></figure></p>
+<p>可以通过类全路径字符串描述或者对象的getClass方法来获取一个类。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">clazz.getField(<span class="string">"fieldname"</span>);<span class="comment">// 获取某列属性</span></span><br><span class="line">clazz.getDeclaredField(<span class="string">"fieldname"</span>);<span class="comment">//或者本对象不包括继承的某列属性</span></span><br><span class="line">clazz.getFields(); <span class="comment">//获取所有属性</span></span><br><span class="line">clazz.getDeclaredFields(); <span class="comment">//获取本对象不包括继承的属性</span></span><br></pre></td></tr></table></figure></p>
+<p>好了现在我们就获得了Field。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">field.getType();<span class="comment">//获取到类型</span></span><br><span class="line">field.getGenericType();<span class="comment">//获取到范型的类型，</span></span><br></pre></td></tr></table></figure></p>
+<p>这两个的区别在于，以一个List<string>来说，前者返回的只是List.class而后者返回的则是List<string>，后者得到的信息更多，我们解剖对象的时候，更小粒度的控制的时候就得使用这个Api。<br>获取描述符<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> mods = field.getModifiers(); <span class="comment">// 返回一个包涵描述符的整数</span></span><br></pre></td></tr></table></figure></string></string></p>
+<p>对mods进行解析就可以知道描述符了。<br>操作对象的数据，这部分才是数据操作的核心。它可以将一个运行着的对象的数据进行改变，叼不叼。<br>既然获取到了一列Field，那么接下来只需要两个条件就行了，一个是对象，即对谁赋值，然后是值是多少。<br>以一个Student为例子。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> age;</span><br><span class="line">	String name;</span><br><span class="line">	List&lt;String&gt; followers;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>假设又了一个Student对象student，那么进行赋值操作如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Student student = <span class="keyword">new</span> Student();</span><br><span class="line">Class&lt;?&gt; clazz = student.getClass();</span><br><span class="line">Field ageField = clazz.getFieldDeclaredField(<span class="string">"age"</span>);</span><br><span class="line">Field nameField = clazz.getFieldDeclaredField(<span class="string">"name"</span>);</span><br><span class="line">Field followersField = clazz.getFieldDeclaredField(<span class="string">"followers"</span>);</span><br><span class="line">ageField.setInt(student,<span class="number">12</span>);</span><br><span class="line">nameField.set(student,<span class="string">"gordon rawe"</span>);</span><br><span class="line">follows.set(student,Arrays.asList(<span class="string">"nicole"</span>,<span class="string">"saber"</span>));</span><br></pre></td></tr></table></figure></p>
+<p>好了，到这里，列的基本操作就完成啦。</p>
+<h5 id="Methods"><a href="#Methods" class="headerlink" title="Methods"></a>Methods</h5><p>Methods区域的过后补充。</p>
+<h5 id="Constructors"><a href="#Constructors" class="headerlink" title="Constructors"></a>Constructors</h5><p>Constructors区域的过后补充。</p>
+<h4 id="解剖数据"><a href="#解剖数据" class="headerlink" title="解剖数据"></a>解剖数据</h4><p>现在回到文章一开始提出的需求，解剖一个对象，将空的字符串进行赋默认值操作，思路是采用的递归，直到所有的数据类型都是基本类型或者String类型作为结束，由于我们只关心String，那么开始吧。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">replaceNullFieldsWithTarget</span><span class="params">(Class&lt;?&gt; clazz, Object t, String target)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    Field[] fields = clazz.getDeclaredFields();</span><br><span class="line">    <span class="keyword">for</span> (Field field : fields) &#123;</span><br><span class="line">        <span class="keyword">if</span> (field.getType() == String.class) &#123;</span><br><span class="line">            <span class="keyword">if</span> (field.get(t) == <span class="keyword">null</span>) field.set(t, target);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (field.getType() == List.class) &#123;</span><br><span class="line">            List&lt;Object&gt; list = (List&lt;Object&gt;) field.get(t);</span><br><span class="line">            <span class="keyword">if</span> (list != <span class="keyword">null</span> &amp;&amp; list.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (list.get(<span class="number">0</span>).getClass() == String.class) &#123;</span><br><span class="line">                    List&lt;String&gt; newList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">                    <span class="keyword">for</span> (Object obj : list) &#123;</span><br><span class="line">                        newList.add(obj == <span class="keyword">null</span> ? <span class="string">""</span> : obj.toString());</span><br><span class="line">                    &#125;</span><br><span class="line">                    field.set(t, newList);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">for</span> (Object obj : list) &#123;</span><br><span class="line">                        replaceNullFieldsWithTarget(obj.getClass(), obj, target);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!field.getType().isPrimitive()) &#123;</span><br><span class="line">            Object object = field.get(t);</span><br><span class="line">            replaceNullFieldsWithTarget(field.getType(), object, target);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag">#java</a>
+          
+            <a href="/tags/安卓编程/" rel="tag">#安卓编程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/15/基于SurfaceView的loading动画/" rel="next" title="基于SurfaceView的loading动画">
+                <i class="fa fa-chevron-left"></i> 基于SurfaceView的loading动画
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/12/回顾一下安卓Broadcast/" rel="prev" title="回顾一下安卓Broadcast">
+                回顾一下安卓Broadcast <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Gordon Rawe" />
+          <p class="site-author-name" itemprop="name">Gordon Rawe</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java反射基础"><span class="nav-number">2.</span> <span class="nav-text">Java反射基础</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java-Reflction可操纵成员Members"><span class="nav-number">3.</span> <span class="nav-text">Java Reflction可操纵成员Members</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Fields"><span class="nav-number">3.1.</span> <span class="nav-text">Fields</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Methods"><span class="nav-number">3.2.</span> <span class="nav-text">Methods</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Constructors"><span class="nav-number">3.3.</span> <span class="nav-text">Constructors</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解剖数据"><span class="nav-number">4.</span> <span class="nav-text">解剖数据</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  &copy; Copyright All rights are reserved by 
+  <a href="https://github.com/gordon-rawe"><span class="author" itemprop="copyrightHolder">Gordon Rawe</span></a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

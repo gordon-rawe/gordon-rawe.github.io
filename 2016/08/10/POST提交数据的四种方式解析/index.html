@@ -1,0 +1,619 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Sans Serif:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="网络传输," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="引言最近在做一个文章发布平台，利用spring mvc的框架来搭建，然后现在安卓端做demo，打算做好后移植到ios和h5，但是好久没写服务端的程序了，其中在一个地方卡了半天，一开始我以为是服务端的问题，使用ajax可以成功post，但是用postman客户端出现了问题，后来最重发现是自己对post的理解还不够，好吧，最后发现是没有在头里面传解析Content-Type所致，不准嘲笑我！遂从网上看">
+<meta property="og:type" content="article">
+<meta property="og:title" content="POST提交数据的四种方式解析">
+<meta property="og:url" content="http://yoursite.com/2016/08/10/POST提交数据的四种方式解析/index.html">
+<meta property="og:site_name" content="Gordon's Blog">
+<meta property="og:description" content="引言最近在做一个文章发布平台，利用spring mvc的框架来搭建，然后现在安卓端做demo，打算做好后移植到ios和h5，但是好久没写服务端的程序了，其中在一个地方卡了半天，一开始我以为是服务端的问题，使用ajax可以成功post，但是用postman客户端出现了问题，后来最重发现是自己对post的理解还不够，好吧，最后发现是没有在头里面传解析Content-Type所致，不准嘲笑我！遂从网上看">
+<meta property="og:image" content="http://yoursite.com/one.png">
+<meta property="og:image" content="http://yoursite.com/two.png">
+<meta property="og:image" content="http://yoursite.com/three.png">
+<meta property="og:image" content="http://yoursite.com/four.png">
+<meta property="og:image" content="http://yoursite.com/five.png">
+<meta property="og:image" content="http://yoursite.com/six.png">
+<meta property="og:image" content="http://yoursite.com/seven.png">
+<meta property="og:updated_time" content="2016-09-19T02:41:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="POST提交数据的四种方式解析">
+<meta name="twitter:description" content="引言最近在做一个文章发布平台，利用spring mvc的框架来搭建，然后现在安卓端做demo，打算做好后移植到ios和h5，但是好久没写服务端的程序了，其中在一个地方卡了半天，一开始我以为是服务端的问题，使用ajax可以成功post，但是用postman客户端出现了问题，后来最重发现是自己对post的理解还不够，好吧，最后发现是没有在头里面传解析Content-Type所致，不准嘲笑我！遂从网上看">
+<meta name="twitter:image" content="http://yoursite.com/one.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+  <title> POST提交数据的四种方式解析 | Gordon's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Gordon's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">still believe in that world can be reshaped by coding and we can benifit from it.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Blogs
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Timeline
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                POST提交数据的四种方式解析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-08-10T13:45:05+08:00" content="2016-08-10">
+              2016-08-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/网络/" itemprop="url" rel="index">
+                    <span itemprop="name">网络</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h4><p>最近在做一个文章发布平台，利用spring mvc的框架来搭建，然后现在安卓端做demo，打算做好后移植到ios和h5，但是好久没写服务端的程序了，其中在一个地方卡了半天，一开始我以为是服务端的问题，使用ajax可以成功post，但是用postman客户端出现了问题，后来最重发现是自己对post的理解还不够，好吧，最后发现是没有在头里面传解析Content-Type所致，不准嘲笑我！遂从网上看到一些不错的文章，然后总结一下，好记性不如烂笔头，纪录一下，方便以后翻阅。<a id="more"></a></p>
+<h4 id="POST请求"><a href="#POST请求" class="headerlink" title="POST请求"></a>POST请求</h4><p>我们知道，HTTP 协议是以 ASCII 码传输，建立在 TCP/IP 协议之上的应用层规范。HTTP 协议规定的 HTTP 请求方法有 OPTIONS、GET、HEAD、POST、PUT、DELETE、TRACE、CONNECT 这几种。其中 POST 一般用来向服务端提交数据，接下来主要讨论 POST 提交数据的几种方式。<br>协议规定 POST 提交的数据必须放在消息主体（entity-body）中，但协议并没有规定数据必须使用什么编码方式。但是，数据发送出去，还要服务端解析成功才有意义。<br>服务端通常是根据请求头（headers）中的 Content-Type 字段来获知请求中的消息主体是用何种方式编码，再对主体进行解析。<br>POST 提交数据方案，包含了 Content-Type 和消息主体编码方式两部分。下面就正式开始介绍它们。<br>在服务器端判断request来自Ajax请求(异步)还是传统请求(同步)：</p>
+<center><img src="one.png" alt=""></center>
+
+
+<h4 id="application-x-www-form-urlencoded（默认的）"><a href="#application-x-www-form-urlencoded（默认的）" class="headerlink" title="application/x-www-form-urlencoded（默认的）"></a>application/x-www-form-urlencoded（默认的）</h4><p>这应该是最常见的 POST 提交数据的方式了。浏览器的原生 <form> 表单，如果不设置 enctype<br>属性，那么最终就会以 application/x-www-form-urlencoded 方式提交数据。<br>Content-Type 被指定为 application/x-www-form-urlencoded；其次，提交的数据按照 key1=val1&amp;key2=val2 的方式进行编码，key 和 val 都进行了 URL 转码。大部分服务端语言都对这种方式有很好的支持。例如 PHP 中，$_POST[‘title’] 可以获取到 title 的值，$_POST[‘sub’] 可以得到 sub 数组。</form></p>
+<center><img src="two.png" alt=""></center>
+
+
+<h4 id="multipart-form-data类型的数据"><a href="#multipart-form-data类型的数据" class="headerlink" title="multipart/form-data类型的数据"></a>multipart/form-data类型的数据</h4><p>这又是一个常见的 POST 数据提交的方式。我们使用表单上传文件时，必须让form表单的 enctyped<br>等于 multipart/form-data。<br>input type=file 浏览器处于安全考虑 ， 必须操作赋值，不能直接改value,<br>比如canvas 直接生成图片之后上传 就不能使用 input type=file。可以直接把得到的图片转换成 base64 上传。<br>直接来看一个请求示例：</p>
+<center><img src="three.png" alt=""></center>
+
+
+<h4 id="application-json类型的数据"><a href="#application-json类型的数据" class="headerlink" title="application/json类型的数据"></a>application/json类型的数据</h4><p>application/json 这种方案，可以方便的提交复杂的结构化数据， 这个 Content-Type 作为响应头大家肯定不陌生。现在越来越多的人把它作为请求头，用来告诉服务端消息主体是序列化后的 JSON 字符串。<br>由于 JSON 规范的流行，除了低版本 IE 之外的各大浏览器都原生支持 JSON.stringify，服务端语言也都有处理 JSON 的函数，使用 JSON 不会遇上什么麻烦。<br>JSON 格式支持比键值对复杂得多的结构化数据，这一点也很有用 AngularJS 中的 Ajax 功能，默认就是提交 JSON 字符串。例如下面这段代码：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> data = &#123;<span class="string">'title'</span>:<span class="string">'test'</span>, <span class="string">'sub'</span> : [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]&#125;;</span><br><span class="line">$http.post(url, data).success(<span class="function"><span class="keyword">function</span>(<span class="params">result</span>) </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>最终发送的请求是：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Content-Type: application/json;charset=utf<span class="number">-8</span></span><br><span class="line"> &#123;<span class="string">"title"</span>:<span class="string">"test"</span>,<span class="string">"sub"</span>:[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]&#125;</span><br></pre></td></tr></table></figure></p>
+<center><img src="four.png" alt=""></center><br>JSON.parse()和JSON.stringify()<br><center><img src="five.png" alt=""></center>
+
+
+<h4 id="text-xml格式"><a href="#text-xml格式" class="headerlink" title="text/xml格式"></a>text/xml格式</h4><p>话说这种格式已经被大众所抛弃了～～<br>默认情况下，标准的跨域请求是不会发送cookie等用户认证凭据的，XMLHttpRequest 2的一个重要改进就是提供了对授信请求访问的支持。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">xhr.open(<span class="string">'POST'</span>, <span class="string">'http://www.xxx.com/api'</span>);</span><br><span class="line">xhr.withCredentials = <span class="literal">true</span>;</span><br><span class="line">xhr.onload = onLoadHandler;</span><br><span class="line">xhr.send();</span><br></pre></td></tr></table></figure></p>
+<p>Access-Control-Allow-Credentials: true</p>
+<center><img src="six.png" alt=""></center>
+
+
+<h4 id="POSTMAN"><a href="#POSTMAN" class="headerlink" title="POSTMAN"></a>POSTMAN</h4><p>POSTMAＮ是我最喜欢的客户端请求模拟工具，那么在里面post数据的时候一定要注意选取格式，最好是将格式带上，因为服务端会根据你所告知的格式去解析，当然写的很好的服务端可能能够根据内容去解析类型，但我们还是最好带上这个header信息，多总比少好嘛。</p>
+<center><img src="seven.png" alt=""></center>
+
+
+
+
+
+
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/网络传输/" rel="tag">#网络传输</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/25/java内存模型与编程建议/" rel="next" title="Java内存模型与编程建议">
+                <i class="fa fa-chevron-left"></i> Java内存模型与编程建议
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/07/Java8的Stream是时候用起来了/" rel="prev" title="Java8的Stream是时候用起来了">
+                Java8的Stream是时候用起来了 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Gordon Rawe" />
+          <p class="site-author-name" itemprop="name">Gordon Rawe</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#POST请求"><span class="nav-number">2.</span> <span class="nav-text">POST请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#application-x-www-form-urlencoded（默认的）"><span class="nav-number">3.</span> <span class="nav-text">application/x-www-form-urlencoded（默认的）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#multipart-form-data类型的数据"><span class="nav-number">4.</span> <span class="nav-text">multipart/form-data类型的数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#application-json类型的数据"><span class="nav-number">5.</span> <span class="nav-text">application/json类型的数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#text-xml格式"><span class="nav-number">6.</span> <span class="nav-text">text/xml格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#POSTMAN"><span class="nav-number">7.</span> <span class="nav-text">POSTMAN</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  &copy; Copyright All rights are reserved by 
+  <a href="https://github.com/gordon-rawe"><span class="author" itemprop="copyrightHolder">Gordon Rawe</span></a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
