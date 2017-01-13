@@ -84,15 +84,12 @@
 
 
 
-<meta name="description">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Gordon's Blog">
 <meta property="og:url" content="http://yoursite.com/index.html">
 <meta property="og:site_name" content="Gordon's Blog">
-<meta property="og:description">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Gordon's Blog">
-<meta name="twitter:description">
 
 
 
@@ -231,6 +228,236 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/10/10/JAVA框架理解-装饰者与传统IO/" itemprop="url">
+                  JAVA框架理解-装饰者与传统IO
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-10-10T12:32:24+08:00" content="2016-10-10">
+              2016-10-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>对于应用程序开发程序员来说，深层次接触IO的机会并不多，可能偶尔需要自己持久化文件的时候会用到一点，通常是去网上抄一段代码，调用一些常见的Api，比如RandomAccessFile，FileInputStream等，对于安卓程序员来说，甚至用一些安卓sdk封装的持久化数据的Api，这是大部分程序猿的开发日常，在调用了这些Api后，背后发生了些什么事情常常被忽略掉，由于大部分是读写一些小文件，磁盘消耗和读写速度如何也不加以考虑了。由于有太多的业务需要去实现，这样做是有其合理性的，但是作为一个合格的开发者，IO包是非常重要的，需要进行系统性的学习，这样不至于乱用Api，写出一些低效甚至错误的代码。顺便说一下，JDK里面的源码注释写的非常好，甚至有些还有简单的使用案例代码。
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/10/10/JAVA框架理解-装饰者与传统IO/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/09/25/内存泄漏问题排查（上）/" itemprop="url">
+                  内存泄漏问题排查（上）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-09-25T14:59:13+08:00" content="2016-09-25">
+              2016-09-25
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h4 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h4><p>内存溢出与内存泄漏问题已经是一个老生常谈的话题了，本文并不是打算谈什么是内存溢出或者内存泄漏，而是打算结合这两年来安卓开发过程中遇到的一些问题进行总结，看看我在一路上遇到的内存泄漏，不得不说，从走上工作岗位后，现在作为开发人员的我的技术相对于在学校里面作为非计算机专业学生的我，的确提高了很多，所以干一行，爱一行，当初选择编程，是因为觉得这和自己喜欢思考和喜欢专研的性格相关，好了，谁关心你呢，逼逼啥呢，赶快进入正题吧。<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/09/25/内存泄漏问题排查（上）/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -483,7 +710,7 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/25/java内存模型与编程建议/" itemprop="url">
+                <a class="post-title-link" href="/2016/07/25/Java内存模型与编程建议/" itemprop="url">
                   Java内存模型与编程建议
                 </a>
               
@@ -547,7 +774,7 @@
         
           <h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>Java内存模型规范了Java虚拟机与计算机内存是如何协同工作的。Java虚拟机是一个完整的计算机的一个模型，因此这个模型自然也包含一个内存模型——又称为Java内存模型。<br>如果你想设计表现良好的并发程序，理解Java内存模型是非常重要的。Java内存模型规定了如何和何时可以看到由其他线程修改过后的共享变量的值，以及在必须时如何同步的访问共享变量。<br>原始的Java内存模型存在一些不足，因此Java内存模型在Java1.5时被重新修订。这个版本的Java内存模型在Java8中人在使用。<br>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/07/25/java内存模型与编程建议/#more" rel="contents">
+            <a class="btn" href="/2016/07/25/Java内存模型与编程建议/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1152,236 +1379,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/04/30/Fragment的使用与常见的坑/" itemprop="url">
-                  Fragment的使用与常见的坑
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-04-30T00:19:30+08:00" content="2016-04-30">
-              2016-04-30
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/编程/" itemprop="url" rel="index">
-                    <span itemprop="name">编程</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h4 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h4><p>本文首先回顾一下安卓Fragment的基本概念、使用、通信和生命周期等，然后结合开发过程中遇到的坑，记录一下解决办法。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/04/30/Fragment的使用与常见的坑/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/04/15/写一个ContentProvider的实用案例/" itemprop="url">
-                  写一个ContentProvider的实用案例
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-04-15T10:31:58+08:00" content="2016-04-15">
-              2016-04-15
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/编程/" itemprop="url" rel="index">
-                    <span itemprop="name">编程</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h4 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h4><p>在安卓安全模型中，一个应用程序不能够直接去访问（读或写）另一个应用程序的数据，每个应用程序都有其自己的带id的结构化数据，自己的文件夹和私有的内存区域，ContentProvider是在这些应用程序间件共享数据。ContentProvider是一组包裹在标准的API下的读写操作。应用程序都必须注册为数据提供者才能共享数据，其它的应用程序能够通过固定的API去读写这些数据，所以ContentProvider严格遵守CRUD原则。<br>常见的实用ContnentProvider的案例有读取联系人方式、读取多媒体信息、以及其它的应用程序数据，同时也允许这些应用程序增删改查这些数据。<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/04/15/写一个ContentProvider的实用案例/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1427,7 +1424,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>

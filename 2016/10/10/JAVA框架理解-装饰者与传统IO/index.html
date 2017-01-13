@@ -1,0 +1,653 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Sans Serif:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JAVA," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="概述对于应用程序开发程序员来说，深层次接触IO的机会并不多，可能偶尔需要自己持久化文件的时候会用到一点，通常是去网上抄一段代码，调用一些常见的Api，比如RandomAccessFile，FileInputStream等，对于安卓程序员来说，甚至用一些安卓sdk封装的持久化数据的Api，这是大部分程序猿的开发日常，在调用了这些Api后，背后发生了些什么事情常常被忽略掉，由于大部分是读写一些小文件，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JAVA框架理解-装饰者与传统IO">
+<meta property="og:url" content="http://yoursite.com/2016/10/10/JAVA框架理解-装饰者与传统IO/index.html">
+<meta property="og:site_name" content="Gordon's Blog">
+<meta property="og:description" content="概述对于应用程序开发程序员来说，深层次接触IO的机会并不多，可能偶尔需要自己持久化文件的时候会用到一点，通常是去网上抄一段代码，调用一些常见的Api，比如RandomAccessFile，FileInputStream等，对于安卓程序员来说，甚至用一些安卓sdk封装的持久化数据的Api，这是大部分程序猿的开发日常，在调用了这些Api后，背后发生了些什么事情常常被忽略掉，由于大部分是读写一些小文件，">
+<meta property="og:image" content="http://yoursite.com/Radial.png">
+<meta property="og:image" content="http://yoursite.com/Decorator.png">
+<meta property="og:image" content="http://yoursite.com/Radial.png">
+<meta property="og:image" content="http://yoursite.com/Java_Hierachy.png">
+<meta property="og:image" content="http://yoursite.com/Java_Input_Stream.png">
+<meta property="og:image" content="http://yoursite.com/Java_Output_Stream.png">
+<meta property="og:image" content="http://yoursite.com/Java_Reader.png">
+<meta property="og:image" content="http://yoursite.com/Java_Writer.png">
+<meta property="og:updated_time" content="2016-11-06T14:43:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JAVA框架理解-装饰者与传统IO">
+<meta name="twitter:description" content="概述对于应用程序开发程序员来说，深层次接触IO的机会并不多，可能偶尔需要自己持久化文件的时候会用到一点，通常是去网上抄一段代码，调用一些常见的Api，比如RandomAccessFile，FileInputStream等，对于安卓程序员来说，甚至用一些安卓sdk封装的持久化数据的Api，这是大部分程序猿的开发日常，在调用了这些Api后，背后发生了些什么事情常常被忽略掉，由于大部分是读写一些小文件，">
+<meta name="twitter:image" content="http://yoursite.com/Radial.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+  <title> JAVA框架理解-装饰者与传统IO | Gordon's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Gordon's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">still believe in that world can be reshaped by coding and we can benifit from it.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Blogs
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Timeline
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JAVA框架理解-装饰者与传统IO
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-10-10T12:32:24+08:00" content="2016-10-10">
+              2016-10-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>对于应用程序开发程序员来说，深层次接触IO的机会并不多，可能偶尔需要自己持久化文件的时候会用到一点，通常是去网上抄一段代码，调用一些常见的Api，比如RandomAccessFile，FileInputStream等，对于安卓程序员来说，甚至用一些安卓sdk封装的持久化数据的Api，这是大部分程序猿的开发日常，在调用了这些Api后，背后发生了些什么事情常常被忽略掉，由于大部分是读写一些小文件，磁盘消耗和读写速度如何也不加以考虑了。由于有太多的业务需要去实现，这样做是有其合理性的，但是作为一个合格的开发者，IO包是非常重要的，需要进行系统性的学习，这样不至于乱用Api，写出一些低效甚至错误的代码。顺便说一下，JDK里面的源码注释写的非常好，甚至有些还有简单的使用案例代码。<a id="more"></a></p>
+<h4 id="方法论"><a href="#方法论" class="headerlink" title="方法论"></a>方法论</h4><p>JAVA IO包下有很多的类，为了更佳宏观上进行把控同时对关键问题进行深入分析，本文打算分以下几个部分来写：</p>
+<ol>
+<li>装饰者模式相关知识</li>
+<li>IO基本概念和操作</li>
+<li>IO包如何利用装饰者模式设计管理相关类</li>
+<li>核心接口和类的用法和注意点</li>
+<li>常见的IO相关的问答<br>通过以上几个知识点的梳理，可以对JAVA的IO包有了比较系统的认识，对于以后的开发将会大有裨益，。</li>
+</ol>
+<h4 id="装饰者模式"><a href="#装饰者模式" class="headerlink" title="装饰者模式"></a>装饰者模式</h4><h5 id="装饰者模式的作用"><a href="#装饰者模式的作用" class="headerlink" title="装饰者模式的作用"></a>装饰者模式的作用</h5><p>首先要用一个模式的时候，关心的是它能解决什么问题，那么装饰者模式，能干什么呢？我自己做个比喻吧，考虑以下这么个场景，我们要实现一个根据信息生成简历的系统，一般情况下，假设我们定义了一个最顶层的接口，比如:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Resume</span></span>&#123;</div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">generateResume</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>接下来，我们要给这个简历系统增加各种各样的功能，比如从txt读取生成，比如从xml读取生成，比如从图片直接读取生成等等，除了从各种文件读取生成的功能，还想要增加改变背景颜色，改变自定义logo等一堆乱七八糟的功能，这些功能可以根据需要进行组装。这个时候，很多开发者就会说啦，这有什么问题，需要用到什么功能的时候，继承自Resume接口写就可以了，如果需要在原有的功能上增加功能，那么在定义基础功能的这个实现类的基础上进行继承，问题就这么解决了，最后的代码组织上大概如下：</p>
+<p><center><img src="Radial.png" alt=""></center><br>可见，整个代码的组织方式看上去会是中心辐射状的，有很多类仅仅是在继承的先后顺序上不同，但最终功能是一致的，这样就会导致一个问题，类的规模会变得不可控制，冗余功能代码很多，灵活性也不高。<br>上面的这个例子和IO功能的开发需求是类似的，IO框架首先需要有向各种源写入和读取的基本功能，然后可以附加一些便捷的操作，比如多个流的叠加、增加缓存功能、增加基本数据类型的读写的快速Api等，其复杂程度和以上的例子是很类似的，JAVA大牛们肯定想的比我们多，所以，它们使用了装饰者模式来组织代码，最后，有效的控制了规模。</p>
+<h5 id="什么是装饰者模式"><a href="#什么是装饰者模式" class="headerlink" title="什么是装饰者模式"></a>什么是装饰者模式</h5><p>装饰者模式是在不改变原来类文件和不使用继承的情况下，动态的扩展一个对象的功能，其实现原理是通过创建一个包装对象，来包裹真实的对象。<br>这都在说啥呢？难道是在讲代理？什么原有对象，真实对象啥的。好吧，其实上面这句话是非常精炼的，是对装饰者模式精华的概括，如果理解了原理，会发现字字到位。顺便说一下，代理模式和装饰者模式的确挺像的，装饰者模式的设计里面的公共函数的实现其实就是用的代理模式，但是两者想要解决的问题是不一样的，代理模式是为其它对象提供一种代理以控制这个对象的访问，重点在于共同实现的方法上，代理调用方法可以在原型的基础上进行一些变化和扩展。<br>好了，直接上图，看着图说话，简单容易很多</p>
+<p><center><img src="Decorator.png" alt=""></center><br>Component接口定义一个对象接口，可以给这些对象动态的添加职责，ConcreteComponent是定义了一个具体的对象，也可以给这个对象添加一些职责。Decorator是装饰者抽象类，继承自Component，从外类来扩展Component，但对于Component来说，是无需知道Decorator的存在的，至于ConcreteDecorator就是具体的对象，起到给Component添加职责的功能。那么我们可以根据装饰者模式来重构前面简历系统的组织方式如下：</p>
+<p><center><img src="Radial.png" alt=""></center><br>可见，经过这样一重构，在类的规模上得到了有效的控制，同时使用的时候，只需要根据需要进行组装就有了相应的控能。<br>在这里讲解装饰者模式代码就不贴了，免得占用很大的篇幅，可以参考我的另外一篇博客(链接地址-&gt;<a href="http://gordon-rawe.github.io)。" target="_blank" rel="external">http://gordon-rawe.github.io)。</a></p>
+<h4 id="IO基本概念"><a href="#IO基本概念" class="headerlink" title="IO基本概念"></a>IO基本概念</h4><h5 id="流"><a href="#流" class="headerlink" title="流"></a>流</h5><p>流是一个比较抽象的概念，大概可以用流水来进行一些比喻。IO操作在本质上是单个字节的移动，而流是字节移动的载体和方式，其不停由源向目标处移动数据，我们所要做的就是根据流的方向从流中读取数据或者向流中写入数据。一个流，必有源和目标，它们可以是计算机内存的某些区域，也可以是磁盘文件，甚至可以是Internet上的某个URL。流的方向是重要的，根据流的方向，流可分为两类：输入流和输出流。我们从输入流读取数据，向输出流写入数据。<br>IO可以分为字节流和字符流，它们的不同在于字符流由字节流包装而来，在IO读入之后经过JVM处理，把字节流转换成字符流。而字符流的字符采用哪种字符编码实现由JVM默认编码决定。</p>
+<h5 id="字节与字符"><a href="#字节与字符" class="headerlink" title="字节与字符"></a>字节与字符</h5><p>字节是通过网络传输信息（或在硬盘或内存中存储信息）的单位。字节是计算机信息技术用于计量存储容量和传输容量的一种计量单位，1个字节等于8位二进制，它是一个8位的二进制数，是一个很具体的存储空间。<br>字符是人们使用的记号，在抽象意义上的一个符号，为此，在计算机专业领域有多种编码标准，如ANSI、UNICODE等。按照ANSI编码标准，标点符号、数字、大小写字母都占一个字节，汉字占2个字节。按照UNICODE标准所有字符都占2个字节。</p>
+<h5 id="字节流与字符流"><a href="#字节流与字符流" class="headerlink" title="字节流与字符流"></a>字节流与字符流</h5><p>搞清楚了字节和字符的概念，理解字节流和字符流就没有问题了。字节流是以字节为导向的流(Stream),所有的IO操作都是针对于一个个字节信息的，同样字符流是将原始的字节流，处理成字符，赋予了其意义的一种IO流。<br>在Java的IO框架里，InputStream和OutputStream及其子类成员都是用来处理字节流的，而Reader和Writer及其子类成员是用来处理字符流的，当然字节流可用来构建字符流（InputStreamReader,InputStreamWriter），字符流在写入文件时候，本质上也是字节流。</p>
+<h4 id="IO包如何使用装饰者模式组织管理类"><a href="#IO包如何使用装饰者模式组织管理类" class="headerlink" title="IO包如何使用装饰者模式组织管理类"></a>IO包如何使用装饰者模式组织管理类</h4><p>JAVA IO框架下有很多的类，这些类有各自的功能，为了不至于类的规模不可收拾，而且可以彼此组装功能，IO包采用了装饰者模式来组织管理这些类(当然不是所有的类都与装饰者模式相关哈，这一点要注意)。<br>用图来展示架构可能更佳宏观，为此，根据JDK1.8的源码和Oracle的文档，画了5张UML概括IO包下核心类的组织关系和核心Api：</p>
+<p><center><img src="Java_Hierachy.png" alt=""></center><br>顶层设计上，主要是InputStream和OutputStream两个用于字节流IO的接口、Reader和Writer两个用于字符流IO的接口以及可以随机读写功能的RandomAccessFile类。本小节只打算从概览一下整个包的组织架构，不展开讨论每个类的实现原理和细节。</p>
+<p><center><img src="Java_Input_Stream.png" alt=""></center></p>
+<p><center><img src="Java_Output_Stream.png" alt=""></center><br>按照装饰者模式设计划分，InputStream和OutputStream对应于Component，ByteArrayInputStream、ObjectInputStream、FileInputStream、SequenceInputStream和PipedInputStream等是InputStream模块的ConcreteComponent，ByteArrayOutputStream、ObjectOutpuStream、FileOutputStream等是OutpuStream模块的ConcreteComponent，FilterInputStream和FilterOutputStream分别是两个模块的Decorator，它们的子类BufferedOutputStream、DataOutputStream、PrintStream、BufferedInputStream、DataInputStream和PushBackInputStream是相应的ConcreteDecorator。</p>
+<p><center><img src="Java_Reader.png" alt=""></center></p>
+<p><center><img src="Java_Writer.png" alt=""></center><br>同样，按照装饰者模式设计划分，Reader和Writer是顶层抽象Component，InputStreamReader、CharArrayReader、StringReader、PipedReader和BufferedReader是字符流Reader的ConcreteComponent，BufferedWriter、CharArrayWriter、OutputStreamWriter、PipedWriter、StringWriter和PrintWriter是字符流Writer的ConcreteComponent，FilterReader和FilterWriter是Decorator，PushBackReader是ConcreteDecorator。<br>可以发现JAVA IO的确是用了装饰者模式，但是不是所有的类都参与其中，核心功能比如从什么源来构建流，属于核心功能，那么将其设计为ConcreteComponent，而一些辅助，这里写辅助并不是说不重要啊，比如Buffer缓冲功能就很重要，被设计为ConcreteDecorator。所以一般的使用的思路就首先确定从什么源选最初的构造，比如从文件读取，那么就是FileInputStream，然后想要添加缓冲功能增加效率，减少IO次数，就使用BufferedInputStream包装一下，再然后我想直接读取原始类型数据，那么再用DataInputStream来包装一下，这样，我们强大的功能就这么被组装起来了，由于篇幅，不展开说如何去组装，感兴趣的同学可以自己DIY。</p>
+<h4 id="核心接口和类的用法和注意点"><a href="#核心接口和类的用法和注意点" class="headerlink" title="核心接口和类的用法和注意点"></a>核心接口和类的用法和注意点</h4><p>为了更好的理解JAVA IO，那么IO基础原理必须得了解，顶层的接口里，每个类的注释都写的非常好，顶层函数的定义，体现了构建整个IO功能最基础的功能，InputStream、OutputStream、Reader和Writer定义的函数不多，我们可以一个个来看。</p>
+<h5 id="InputStream"><a href="#InputStream" class="headerlink" title="InputStream"></a>InputStream</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * This abstract class is the superclass of all classes representing</div><div class="line"> * an input stream of bytes.</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">()</span> <span class="keyword">throws</span> IOException</span>;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">byte</span> b[])</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">	<span class="keyword">return</span> read(b, <span class="number">0</span>, b.length);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">byte</span> b[], <span class="keyword">int</span> off, <span class="keyword">int</span> len)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="comment">// some codes are ignored...</span></div><div class="line">    <span class="keyword">int</span> i = <span class="number">1</span>;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">for</span> (; i &lt; len ; i++) &#123;</div><div class="line">            c = read();</div><div class="line">            <span class="keyword">if</span> (c == -<span class="number">1</span>) &#123;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">            b[off + i] = (<span class="keyword">byte</span>)c;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (IOException ee) &#123;&#125;</div><div class="line">    <span class="keyword">return</span> i;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">skip</span><span class="params">(<span class="keyword">long</span> n)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="keyword">long</span> remaining = n;</div><div class="line">	<span class="comment">//some codes are ignored...   	</span></div><div class="line">    <span class="keyword">return</span> n - remaining;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">available</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123; <span class="keyword">return</span> <span class="number">0</span>; &#125;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;&#125;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">mark</span><span class="params">(<span class="keyword">int</span> readlimit)</span> </span>&#123;&#125;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">reset</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"mark/reset not supported"</span>);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">markSupported</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从官方的注释可以明白其定义目的，该类是所有具有字节流处理功能的类的抽象父类。<br>read()方法尝试读取字节流的下一个字节，返回读取到的值byte用0到255范围的int类型返回，如果读取到最后没有更多的字节的时候，调用该方法会返回-1。调用该方法会尝试读取一个字节数据，如果这个字节正在传输而处于暂时不可获取状态，该方法会阻塞，知道有可获取的数据、读取到文件末尾(一般用EOF标志)或者发生异常时，该方法就会停止阻塞。<br>read(byte[] bytes)本质上是调用了read(byte[] bytes,int off,int len)方法，在InputStream顶层的接口就实现了该方法，它是通过循环调用read()来实现的，如果片面的看InputStream的实现，容易产生一个误会，既然read(byte[] bytes)是循环调用read()，那么一次多个字节缓冲并不起任何作用，为何我们还说使用缓冲可以节省磁盘写入和读取的次数呢？这个问题我们后面来讲。<br>skip(long n)方法用于跳过并丢弃掉字节流的n个byte，其返回值可能会由于一些原因，比如n超过了总的字节数或者超过了剩余的未读字节数的情况下，会返回一个比n小的数，如果输入了一个负数，默认实现是返回0，并且不会丢弃任何字节，但是子类在这个方面可以有自己的处理办法和意义。<br>avaialble()方法用于返回当前字节流下一次读取前不用阻塞就能读取或跳过的字节数的大约值，这里写下一次读取前不能阻塞就能读取，是针对一些类似网络IO的情况，本地文件的读写使用available()一般可以返回总的字节数，但是一些网络IO，比如，Socket通讯时，对方明明发来了1000个字节，但是自己的程序调用available()方法却只得到900，或者100，甚至是0，感觉有点莫名其妙，怎么也找不到原因。其实，这是因为网络通讯往往是间断性的，一串字节往往分几批进行发送。本地程序调用available()方法有时得到0，这可能是对方还没有响应，也可能是对方已经响应了，但是数据还没有送达本地。对方发送了1000个字节给你，也许分成3批到达，这你就要调用3次available()方法才能将数据总数全部得到，好了，简单来说就是available有些时候不太靠谱，我也曾经才过坑，从网上拉过一些半成品文件。<br>close()方法用于关闭一个字节流，并且释放和这个字节流相关的系统资源，当一个流关闭了以后，其它方法涉及与系统io操作都不能进行了，不然就会得到IO异常。<br>后面三个方法通常是配套使用的，InputStream默认是不支持mark的，子类需要支持mark必须重写这三个方法。 mark用于在此输入流中标记当前的位置。对reset 方法的后续调用会在最后标记的位置重新定位此流，以便后续读取重新读取相同的字节，readlimit参数告知此输入流在标记位置失效之前允许读取许多字节。reset方法就是简单的讲下一个要读取的pos复位位上次标记的时候的值，BufferedInputStream就实现了mark和reset机制，可以进行参考，一般使用这些功能进行数据窥探和重复使用，细节不做展开，(link -&gt; <a href="http://zhangbo-peipei-163-com.iteye.com/blog/2022460)可参考该链接博客。" target="_blank" rel="external">http://zhangbo-peipei-163-com.iteye.com/blog/2022460)可参考该链接博客。</a></p>
+<h5 id="OutputStream"><a href="#OutputStream" class="headerlink" title="OutputStream"></a>OutputStream</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * This abstract class is the superclass of all classes representing</div><div class="line"> * an output stream of bytes. An output stream accepts output bytes</div><div class="line"> * and sends them to some sink.</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">int</span> b)</span> <span class="keyword">throws</span> IOException</span>;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">byte</span> b[])</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    write(b, <span class="number">0</span>, b.length);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">byte</span> b[], <span class="keyword">int</span> off, <span class="keyword">int</span> len)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="comment">// some codes are ignored...</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; len ; i++) &#123;</div><div class="line">        write(b[off + i]);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">flush</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;&#125;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;&#125;</div></pre></td></tr></table></figure>
+<p>该类是所有具有字节输出功能类的父类，主要有上面五个方法，OK，其实是四个。<br>write(int b)用于写入一个字节的数据，这里使用的int，但是只有最后的八位是有效的，其它的24位都被忽略掉了。<br>write(byte[] bytes,int off,int len)方法用于写入多个byte的数据，在OutputStream中的默认实现也是循环调用write来实现的，那么和上面一样，同样会有一种调用该方法并没有减少磁盘压力的作用。<br>flush()方法用于将数据强制刷新到要写入的目的地。<br>close()方法用于释放系统资源，已经关闭了以后，其它IO操作时会发生IO异常。</p>
+<h5 id="Reader和Writer"><a href="#Reader和Writer" class="headerlink" title="Reader和Writer"></a>Reader和Writer</h5><p>Reader、Writer和InputStream、OutputStream接口差不多，Reader多了ready和read(CharBuffer buffer)，前者很好理解，后者是和NIO中的Buffer进行对接，然后read系列方法里InputStream是int，而Reader是char，同时还有同步方面lock的踪迹，做了线程安全方面的一些处理。Writer增加write(String s,int off,int len)，可以方便的将字符串写入目标，还增加了append系列的函数，有点像动态扩容数组，方便追加内容，同样，Writer也做了同步方面的处理。</p>
+<h4 id="核心类"><a href="#核心类" class="headerlink" title="核心类"></a>核心类</h4><p>限于篇幅，不可能围绕每个类详细的展开，不然就成了jdk文档了，那么，本文打算列举一些常用的代码片段，以此来对IO包的常用类有直观的认识。</p>
+<h5 id="InputStream族"><a href="#InputStream族" class="headerlink" title="InputStream族"></a>InputStream族</h5><p>ByteArrayInputStream把内存中的一个缓冲区作为InputStream使用。<br>StringBufferInputStream把一个String对象作为InputStream，但是官方不推荐使用StringBufferInputStream方法，此类不能将字符正确的转换为字节。<br>FileInputStream把一个文件作为InputStream，实现对文件的读取操作，getChannel()方法返回一个FileChannel对象，这个主要用于JNIO中的通道的。<br>PipedInputStream实现了管道的概念，主要在线程中使用，管道输入流是指一个通讯管道的接收端。一个线程通过管道输出流发送数据，而另一个线程通过管道输入流读取数据，这样可实现两个线程间的通讯。其connection(PipedOutputStream)方法用来连接PipedOutputStream对象。<br>SequenceInputStream把多个InputStream合并为两个InputStream，其允许应用程序把几个输入流连续地合并起来，并且使它们像单个输入流一样出现，每个输入流依次被读取，直到到达该流的末尾。<br>ObjectInputStream用于操作Object的stream，ObjectInputStream(InputStream)用一个InputStream对象来实例化一个ObjectInputStream对象，其中InputStream就是对象的输入流。readObject(Object)方法将一个对象写入到stream中，但是这个object必须实现序列化接口，其他的还有像readInt,readFloat等这样基本类型的方法，因为基本类型对应的对象也都是Object.<br>FilterInputStream是一个装饰者类，直接使用它没有任何意义，但是它的子类可以改变或增强原有的一些类的功能。<br>BufferedInputStream使用缓冲区的stream，增强了原有的传入的InputStream的功能，使用缓冲区有一些好处，可以通过支持mark和reset操作，jdk里BufferedInputStream的markSupport是返回true的，所以，想要用这种带缓冲的字节流，BufferedInputStream很适合，构造的时候可以选择缓冲区大小，默认是8k，除了mark和set功能，其最重要的还是预读缓存策略，即如果调用read(),那么第一次会读一批数据缓存起来，以后的每次read()从缓存中去取，这样就不会频繁的触发操作系统IO。<br>DataInputStream是一种将数字格式化的InputStream，可以从流中直接读取原始类型，读取的时候最好和写入的类型顺序一致，不然可能会读取失败。<br>PushBackInputStream挺有意思的，可以有unread操作，即先读一部分，然后还可以返回去一些字节，该流可以窥探一些数据，然后做操作，相比其它的只能向前读取，其提供了很多灵活性。</p>
+<h5 id="OutputStream族"><a href="#OutputStream族" class="headerlink" title="OutputStream族"></a>OutputStream族</h5><p>ByteArrayOutputStream把信息存入内存中的一个缓冲区中,实现了一个以字节数组形式写入数据的输出流，当数据写入缓冲区时，发生扩容，toByteArray()和toString()方法用于查看数据，writeTo(OutputStream out)用out.write(buf, 0, count)调用输出流的写方法将该字节数组输出流的全部内容写入指定的输出流参数。<br>FileOutputStream向File或FileDescriptor输出数据，可以指定是否以追加的方式进行写入，默认是不追加的，getChannel()方法返回一个FileChannel对象，这个主要用于NIO中的通道操作。<br>PipedOutputStream是一个通讯管道的发送端，一个线程通过管道输出流发送数据，而另一个线程通过管道输入流读取数据，这样可实现两个线程间的通讯，其connection(PipedInputStream)用于连接一个PipedInputStream。<br>ObjectOutputStream是对象输出流，于ObjectInputStream对应使用，能够将一个对象写入到OutputStream中，其writeObject(Object)方法将一个对象Object写入到OutputStream中，writeInt(),writeFloat()等类似的基本类型方法，因为基本类型对应的对象类型都是Object的子类，所以可以这样操作，ObjectInputStream/ObjectOutputStream主要用与将一个对象Object写入到本地或者是在网络中进行传输的，所以这些对象需要进行序列化操作。<br>FilterOutputStream是架构装饰者模式中的Decorator，无实际意义，主要是为了组织其子类而创建的类。<br>BufferedOutputStream带有缓冲区的stream，它的特点在于不会频繁的和调用操作系统进行IO，其采取了更佳聪明的策略，即先缓冲起来，等到到达一定的数量了，一次写入，那么这样就减少了磁盘IO的次数，遇到EOF或者调用flush，都会在没有满的情况下触发磁盘IO。<br>DataOutputStream是一种具有格式化的OutputStream，用于增强一个OutputStream让其具有写出各种基础数据类型的功能，典型的函数如writeInt,writeFloat,writeDouble等。</p>
+<h5 id="Reader族"><a href="#Reader族" class="headerlink" title="Reader族"></a>Reader族</h5><p>CharArrayReader在功能上与ByteArrayInputStream对应此类实现一个可用作字符输入流的字符缓冲区。<br>StringReader功能上与StringBufferInputStream对应，从一个字符串读取生成字符流。<br>FileReader是InputStreamReader的子类，本质上是封装了一个FileInputStream的InputStreamReader。<br>PipedReader功能上与PipedInputStream对应。<br>InputStreamReader是InputStream和Reader之前转化的桥梁,是从字节流到字符流的桥梁,它读入字节，并根据指定的编码方式，将之转换为字符流。InputStreamReader的read()方法之一的每次调用，可能促使从基本字节输入流中读取一个或多个字节。<br>为了达到更高效率，考虑用BufferedReader封装InputStreamReader，使用的编码方式可能由名称指定，或平台可接受的缺省编码方式。</p>
+<h5 id="Writer族"><a href="#Writer族" class="headerlink" title="Writer族"></a>Writer族</h5><p>CharArrayWriter功能上与ByteArrayOutputStream对应，可以向另一个Writer写字符流。<br>FileWriter本质上是一个包装了FileOutputStream的OutputStreamWriter。<br>OutputStreamWriter将OutputStream转化成Writer，将多个字符写入到一个输出流，根据指定的字符编码将多个字符转换为字节，每个OutputStreamWriter合并它自己的CharToByteConverter,因而是从字符流到字节流的桥梁，PrintReader和PrintStream对应。</p>
+<h5 id="核心类的使用方法"><a href="#核心类的使用方法" class="headerlink" title="核心类的使用方法"></a>核心类的使用方法</h5><p>这个小结一直在犹豫要不要写，网上随便google一大堆，没有什么意义，最后还是决定加到文章里，不是为了凑篇幅，个人写博客写的是情怀，又不是像读研时候的论文，而是为了日后查阅方便，对于这些操作已经很轻车熟路的童鞋们，就直接跳过这个区域吧！<br>ByteArrayOutputStream实例Demo：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ByteArrayOutputStreamDemo</span> </span>&#123;</div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span><span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">      ByteArrayOutputStream bOutput = <span class="keyword">new</span> ByteArrayOutputStream(<span class="number">12</span>);</div><div class="line">      <span class="keyword">while</span>( bOutput.size()!= <span class="number">10</span> ) &#123;</div><div class="line">         <span class="comment">//从字符串生成字符数组</span></div><div class="line">         bOutput.write(<span class="string">"hello"</span>.getBytes()); </div><div class="line">      &#125;</div><div class="line">      <span class="keyword">byte</span> b [] = bOutput.toByteArray();</div><div class="line">      System.out.println(<span class="string">"Print the content"</span>);</div><div class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> x = <span class="number">0</span> ; x &lt; b.length; x++) &#123;</div><div class="line">         <span class="comment">//打印这些字符</span></div><div class="line">         System.out.print((<span class="keyword">char</span>)b[x]  + <span class="string">"   "</span>); </div><div class="line">      &#125;</div><div class="line">      System.out.println(<span class="string">"   "</span>);</div><div class="line">      <span class="keyword">int</span> c;</div><div class="line">      ByteArrayInputStream bInput = <span class="keyword">new</span> ByteArrayInputStream(b);</div><div class="line">      System.out.println(<span class="string">"Converting characters to Upper case "</span> );</div><div class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> y = <span class="number">0</span> ; y &lt; <span class="number">1</span>; y++) &#123;</div><div class="line">         <span class="keyword">while</span>(( c = bInput.read())!= -<span class="number">1</span>) &#123;</div><div class="line">            System.out.println(Character.toUpperCase((<span class="keyword">char</span>)c));</div><div class="line">         &#125;</div><div class="line">         bInput.reset(); </div><div class="line">      &#125;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>StringBufferInputStream官方已经标记为Deprecated了，因为其不能正确的进行编码转换，既然如此，那就不看了，推荐使用StringReader，那我们来看看StringReader的实例Demo吧：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StringReaderDemo</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        String str = <span class="string">"Hello World! \nThis is StringReader Program."</span>;</div><div class="line">        StringReader sr = <span class="keyword">new</span> StringReader(str);</div><div class="line">        <span class="keyword">int</span> i=<span class="number">0</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">			<span class="keyword">while</span>((i=sr.read())!=-<span class="number">1</span>)&#123;</div><div class="line">				System.out.print((<span class="keyword">char</span>)i);</div><div class="line">                        &#125;</div><div class="line">	&#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">	&#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>最常见的应该是FileInputStream和FileOutputStream了，一个典型的不带缓冲的读写例子：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileInputStreamDemo</span> </span>&#123;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> String SRC = <span class="string">"src.txt"</span>;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> String DEST = <span class="string">"dest.txt"</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        FileInputStream inputStream = <span class="keyword">null</span>;</div><div class="line">        FileOutputStream outputStream = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">int</span> tmpValue;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            inputStream = <span class="keyword">new</span> FileInputStream(SRC);</div><div class="line">            outputStream = <span class="keyword">new</span> FileOutputStream(DEST);</div><div class="line">            <span class="keyword">while</span> ((tmpValue = inputStream.read()) != -<span class="number">1</span>) &#123;</div><div class="line">                outputStream.write(tmpValue);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                outputStream.flush();</div><div class="line">                inputStream.close();</div><div class="line">                outputStream.close();</div><div class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>提高一点效率，来个带缓冲的读写的例子：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BufferedFileInputStreamDemo</span> </span>&#123;</div><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> String SRC = <span class="string">"src.txt"</span>;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> String DEST = <span class="string">"dest.txt"</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        FileInputStream inputStream = <span class="keyword">null</span>;</div><div class="line">        FileOutputStream outputStream = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">byte</span>[] tmpValue = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</div><div class="line">        <span class="keyword">int</span> tmpCount;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            inputStream = <span class="keyword">new</span> FileInputStream(SRC);</div><div class="line">            outputStream = <span class="keyword">new</span> FileOutputStream(DEST);</div><div class="line">            <span class="keyword">while</span> ((tmpCount = inputStream.read(tmpValue)) != -<span class="number">1</span>) &#123;</div><div class="line">                outputStream.write(tmpValue, <span class="number">0</span>, tmpCount);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                outputStream.flush();</div><div class="line">                inputStream.close();</div><div class="line">                outputStream.close();</div><div class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>都讲到这里了，那就得提一下BufferedInputStream和BufferedOutputStream啦，同样的代码，使用BufferedInputStream和BufferedOutputStream包装一下，真实的磁盘IO会是两样：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BufferedInputStreamDemo</span> </span>&#123;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> String SRC = <span class="string">"src.txt"</span>;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> String DEST = <span class="string">"dest.txt"</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        InputStream inputStream = <span class="keyword">null</span>;</div><div class="line">        OutputStream outputStream = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">int</span> tmpValue;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            inputStream = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(SRC));</div><div class="line">            outputStream = <span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(DEST));</div><div class="line">            <span class="keyword">while</span> ((tmpValue = inputStream.read()) != -<span class="number">1</span>) &#123;</div><div class="line">                outputStream.write(tmpValue);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">assert</span> outputStream != <span class="keyword">null</span>;</div><div class="line">                outputStream.flush();</div><div class="line">                inputStream.close();</div><div class="line">                outputStream.close();</div><div class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>BufferedInputStream还支持mark和reset操作，假设一个文本src.txt里面有 gordon is handsome! 这几个字符，当都到h的时候我们进行标记，当到!的时候reset一下，重新读取，我们可以写出如下代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BufferedInputStreamDemo</span> </span>&#123;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> String SRC = <span class="string">"src.txt"</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        InputStream inputStream = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">boolean</span> marked = <span class="keyword">false</span>;</div><div class="line">        <span class="keyword">int</span> tmpValue;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            inputStream = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(SRC));</div><div class="line">            <span class="keyword">while</span> ((tmpValue = inputStream.read()) != -<span class="number">1</span>) &#123;</div><div class="line">                <span class="keyword">char</span> tmpChar = (<span class="keyword">char</span>) tmpValue;</div><div class="line">                <span class="keyword">if</span> (tmpChar == <span class="string">'h'</span> &amp;&amp; !marked) &#123;</div><div class="line">                    inputStream.mark(inputStream.available());</div><div class="line">                    marked = <span class="keyword">true</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span> (tmpChar == <span class="string">'!'</span> &amp;&amp; marked) &#123;</div><div class="line">                    inputStream.reset();</div><div class="line">                    marked = <span class="keyword">false</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                inputStream.close();</div><div class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在本地文件读取的时候，available还是可靠的，从上面的demo我们可以看到mark和reset的用法，代码简单，就不赘述了，除了BufferedInputStream外，上面的ByteArrayInputStream也支持该功能。</p>
+<p>PipedInputStream和PipedOutputStream也挺有意思的，附上一个例子：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PipedInputOutputDemo</span> </span>&#123;</div><div class="line">	<span class="keyword">final</span> <span class="keyword">static</span> PipedOutputStream pipedOut = <span class="keyword">new</span> PipedOutputStream();</div><div class="line">    <span class="keyword">final</span> <span class="keyword">static</span> PipedInputStream pipedIn = <span class="keyword">new</span> PipedInputStream();</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">PipedOutputThread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++) &#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    pipedOut.write((<span class="string">"Message "</span> + i + <span class="string">"\n"</span>).getBytes());</div><div class="line">                    Thread.sleep(<span class="number">500</span>);</div><div class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">PipedInputThread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">                <span class="keyword">while</span> ((i = pipedIn.read()) != -<span class="number">1</span>) &#123;</div><div class="line">                    System.out.print((<span class="keyword">char</span>) i);</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            pipedOut.connect(pipedIn);</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">        ExecutorService service = Executors.newFixedThreadPool(<span class="number">2</span>);</div><div class="line">        service.execute(<span class="keyword">new</span> PipedInputOutputDemo().new PipedOutputThread());</div><div class="line">        service.execute(<span class="keyword">new</span> PipedInputOutputDemo().new PipedInputThread());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>代码依然简单如斯，不做解释。</p>
+<p>到了DataInputStream了，上代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DataInputStreamDemo</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">        InputStream is = <span class="keyword">null</span>;</div><div class="line">        DataInputStream dis = <span class="keyword">null</span>;</div><div class="line">        FileOutputStream fos = <span class="keyword">null</span>;</div><div class="line">        DataOutputStream dos = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">double</span>[] dbuf = &#123;<span class="number">65.56</span>, <span class="number">66.89</span>, <span class="number">67.98</span>, <span class="number">68.82</span>, <span class="number">69.55</span>, <span class="number">70.37</span>&#125;;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            fos = <span class="keyword">new</span> FileOutputStream(<span class="string">"test.txt"</span>);</div><div class="line">            dos = <span class="keyword">new</span> DataOutputStream(fos);</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">double</span> d : dbuf) &#123;</div><div class="line">                dos.writeDouble(d);</div><div class="line">            &#125;</div><div class="line">            dos.flush();</div><div class="line">            is = <span class="keyword">new</span> FileInputStream(<span class="string">"test.txt"</span>);</div><div class="line">            dis = <span class="keyword">new</span> DataInputStream(is);</div><div class="line">            <span class="keyword">while</span> (dis.available() &gt; <span class="number">0</span>) &#123;</div><div class="line">                <span class="keyword">double</span> c = dis.readDouble();</div><div class="line">                System.out.print(c + <span class="string">" "</span>);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">if</span> (is != <span class="keyword">null</span>)</div><div class="line">                is.close();</div><div class="line">            <span class="keyword">if</span> (dos != <span class="keyword">null</span>)</div><div class="line">                is.close();</div><div class="line">            <span class="keyword">if</span> (dis != <span class="keyword">null</span>)</div><div class="line">                dis.close();</div><div class="line">            <span class="keyword">if</span> (fos != <span class="keyword">null</span>)</div><div class="line">                fos.close();</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>再来个有趣的，SequenceInputStream用于多个文件流合并，上代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SequenceInputStreamDemo</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line"></div><div class="line">		FileInputStream fis1 = <span class="keyword">new</span> FileInputStream(<span class="string">"testfile1.txt"</span>);</div><div class="line">		FileInputStream fis2 = <span class="keyword">new</span> FileInputStream(<span class="string">"testfile2.txt"</span>);</div><div class="line">		FileInputStream fis3 = <span class="keyword">new</span> FileInputStream(<span class="string">"testfile3.txt"</span>);</div><div class="line"></div><div class="line">		Vector&lt;InputStream&gt; inputStreams = <span class="keyword">new</span> Vector&lt;InputStream&gt;();</div><div class="line">		inputStreams.add(fis1);</div><div class="line">		inputStreams.add(fis2);</div><div class="line">		inputStreams.add(fis3);</div><div class="line"></div><div class="line">		Enumeration&lt;InputStream&gt; enu = inputStreams.elements();</div><div class="line">		SequenceInputStream sis = <span class="keyword">new</span> SequenceInputStream(enu);</div><div class="line"></div><div class="line">		<span class="keyword">int</span> oneByte;</div><div class="line">		<span class="keyword">while</span> ((oneByte = sis.read()) != -<span class="number">1</span>) &#123;</div><div class="line">			System.out.write(oneByte);</div><div class="line">		&#125;</div><div class="line">		System.out.flush();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>太多了，来两个Reader的吧，在byte的时候不知道字节换行什么的，但是转换为字符后，就知道在各种编码方式下，什么时候是换行了，于是就有了readLine操作了，当然代码上这很简单了，上个例子：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BufferedReaderDemo</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        String thisLine = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="comment">// open input stream test.txt for reading purpose.</span></div><div class="line">            BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(<span class="string">"src.txt"</span>))));</div><div class="line">            <span class="keyword">while</span> ((thisLine = br.readLine()) != <span class="keyword">null</span>) &#123;</div><div class="line">                System.out.println(thisLine);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>再写一个ObjectOutputInputStream和ObjectInputStream的例子，由于类还是挺多了，到这儿就差不多了吧,看完该吃午饭了：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ObjectWriteReadDemo</span></span>&#123;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</div><div class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">8309080721495266420L</span>;</div><div class="line"></div><div class="line">        <span class="keyword">private</span> String name;</div><div class="line">        <span class="keyword">private</span> <span class="keyword">int</span> age;</div><div class="line">        <span class="keyword">private</span> <span class="keyword">boolean</span> male;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(String name, <span class="keyword">int</span> age, <span class="keyword">boolean</span> male)</span> </span>&#123;</div><div class="line">            <span class="keyword">this</span>.name = name;</div><div class="line">            <span class="keyword">this</span>.age = age;</div><div class="line">            <span class="keyword">this</span>.male = male;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">"name -&gt; "</span> + name + <span class="string">" age -&gt; "</span> + age + <span class="string">" male -&gt; "</span> + (male ? <span class="string">"yes"</span> : <span class="string">"no"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> User <span class="title">createUser</span><span class="params">(String name, <span class="keyword">int</span> age, <span class="keyword">boolean</span> male)</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> User(name, age, male);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        FileOutputStream fileOutputStream = <span class="keyword">null</span>;</div><div class="line">        ObjectOutputStream objectOutputStream = <span class="keyword">null</span>;</div><div class="line">        FileInputStream inputStream = <span class="keyword">null</span>;</div><div class="line">        ObjectInputStream objectInputStream = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            fileOutputStream = <span class="keyword">new</span> FileOutputStream(<span class="string">"src.txt"</span>);</div><div class="line">            objectOutputStream = <span class="keyword">new</span> ObjectOutputStream(fileOutputStream);</div><div class="line">            objectOutputStream.writeObject(User.createUser(<span class="string">"gordon rawe"</span>, <span class="number">25</span>, <span class="keyword">true</span>));</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">assert</span> objectOutputStream != <span class="keyword">null</span>;</div><div class="line">            objectOutputStream.close();</div><div class="line">            objectOutputStream.flush();</div><div class="line">            fileOutputStream.close();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            inputStream = <span class="keyword">new</span> FileInputStream(<span class="string">"src.txt"</span>);</div><div class="line">            objectInputStream = <span class="keyword">new</span> ObjectInputStream(inputStream);</div><div class="line">            User user = (User) objectInputStream.readObject();</div><div class="line">            System.out.println(user);</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">assert</span> objectInputStream != <span class="keyword">null</span>;</div><div class="line">            objectInputStream.close();</div><div class="line">            inputStream.close();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行代码，得到结果是：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">name -&gt; gordon rawe age -&gt; <span class="number">25</span> male -&gt; yes</div></pre></td></tr></table></figure></p>
+<p>如果我们将name字段变为transient的，那么的到的结果是：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">name -&gt; <span class="keyword">null</span> rawe age -&gt; <span class="number">25</span> male -&gt; yes</div></pre></td></tr></table></figure></p>
+<p>原因大家都懂，不做过多的解释啦，这个章节我总觉得是多余了，好了，希望大家不要喷我！</p>
+<h4 id="常见的关于IO的问答"><a href="#常见的关于IO的问答" class="headerlink" title="常见的关于IO的问答"></a>常见的关于IO的问答</h4><h5 id="使用缓冲流如何提高效率？"><a href="#使用缓冲流如何提高效率？" class="headerlink" title="使用缓冲流如何提高效率？"></a>使用缓冲流如何提高效率？</h5><p>很多人在看了InputStream接口的实现后会感到困惑，为什么听别人说使用缓冲流或者自己提供缓冲方法可以有效提高读写效率，而接口里面的read(byte[] buf,int off,int len)是循环的调用read()方法啊，的确接口是这么实现的，但是，JAVA的多态将细节隐藏了，如果查看FileInputStream的read(byte[] buf,int off, int len)是调用了一个native方法readBytes(byte[] buf,int off,int len),该方法可以一次拷贝多个字节，由于每次读写都是用户空间数据和内核空间数据的交互，这些交互需要从两个空间进行切换，减小交互次数能够提高程序的效率，这也是程序鼓励使用缓冲的原因。</p>
+<h5 id="Buffered系列的字符流和字节流怎么就提高效率了？"><a href="#Buffered系列的字符流和字节流怎么就提高效率了？" class="headerlink" title="Buffered系列的字符流和字节流怎么就提高效率了？"></a>Buffered系列的字符流和字节流怎么就提高效率了？</h5><p>这个问题在上面其实已经提及过了，这些类在内部内置了一个缓冲区，用来缓冲数据，在读取数据的时候，一次性预读取一个缓冲区的数据，然后以后的零散的读取数据会从盖缓冲区根据下标去取，这样就不用频繁的调用读取单个字节的read()方法，触发一次磁盘IO；同样，在输出的时候，调用零散的write()方法，会等到一个缓冲区满了以后才将数据正式写入到磁盘，这样就有效减少了磁盘的IO次数，好了，原因就是这样的，突然感觉JAVA官方考虑问题都很完善很具体啊，源码有很多值得学习的地方。</p>
+<h5 id="那么全能选手RandomAccessFile效果如何呢？"><a href="#那么全能选手RandomAccessFile效果如何呢？" class="headerlink" title="那么全能选手RandomAccessFile效果如何呢？"></a>那么全能选手RandomAccessFile效果如何呢？</h5><p>这里有一篇讲的不错的别人的博客，我就不抄袭了，花1K内存实现高效I/O的RandomAccessFile类（<a href="https://www.ibm.com/developerworks/cn/java/l-javaio/）" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/java/l-javaio/）</a></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>最后总结一些通用性的原则。<br>一、按数据来源（去向）分类：<br>1 、是文件： FileInputStream, FileOutputStream, ( 字节流 )FileReader, FileWriter( 字符 )<br>2 、是 byte[] ： ByteArrayInputStream, ByteArrayOutputStream( 字节流 )<br>3 、是 Char[]: CharArrayReader, CharArrayWriter( 字符流 )<br>4 、是 String: StringBufferInputStream, StringBufferOuputStream ( 字节流 )StringReader, StringWriter( 字符流 )<br>5 、网络数据流： InputStream, OutputStream,( 字节流 ) Reader, Writer( 字符流 )</p>
+<p>二、按是否格式化输出分：<br>1 、要格式化输出： PrintStream, PrintWriter</p>
+<p>三、按是否要缓冲分：<br>1 、要缓冲： BufferedInputStream, BufferedOutputStream,( 字节流 ) BufferedReader, BufferedWriter( 字符流 )</p>
+<p>四、按数据格式分：<br>1 、二进制格式（只要不能确定是纯文本的） : InputStream, OutputStream 及其所有带 Stream 结束的子类<br>2 、纯文本格式（含纯英文与汉字或其他编码方式）； Reader, Writer 及其所有带 Reader, Writer 的子类</p>
+<p>五、按输入输出分：<br>1 、输入： Reader, InputStream 类型的子类<br>2 、输出： Writer, OutputStream 类型的子类</p>
+<p>六、特殊需要：<br>1 、从 Stream 到 Reader,Writer 的转换类： InputStreamReader, OutputStreamWriter<br>2 、对象输入输出： ObjectInputStream, ObjectOutputStream<br>3 、进程间通信： PipeInputStream, PipeOutputStream, PipeReader, PipeWriter<br>4 、合并输入： SequenceInputStream<br>5 、更特殊的需要： PushbackInputStream, PushbackReader, LineNumberInputStream, LineNumberReader</p>
+<h5 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h5><p>通过mark和reset方法重复利用InputStream:<br><a href="http://zhangbo-peipei-163-com.iteye.com/blog/2022460" target="_blank" rel="external">http://zhangbo-peipei-163-com.iteye.com/blog/2022460</a></p>
+<p>Java中的IO流系统详解:<br><a href="http://blog.csdn.net/jiangwei0910410003/article/details/22376895" target="_blank" rel="external">http://blog.csdn.net/jiangwei0910410003/article/details/22376895</a></p>
+<p>Java IO最详解<br><a href="http://blog.csdn.net/luckylcs/article/details/50416933" target="_blank" rel="external">http://blog.csdn.net/luckylcs/article/details/50416933</a></p>
+<p>细说java io相关：<br><a href="http://www.cnblogs.com/zhuYears/archive/2013/04/10/2993292.html" target="_blank" rel="external">http://www.cnblogs.com/zhuYears/archive/2013/04/10/2993292.html</a></p>
+<p>很有意思的老外的pdf：<br><a href="http://people.cs.aau.dk/~torp/Teaching/E03/OOP/handouts/io.pdf" target="_blank" rel="external">http://people.cs.aau.dk/~torp/Teaching/E03/OOP/handouts/io.pdf</a></p>
+<p>一个老外的各种上课资料：<br><a href="http://people.cs.aau.dk/~torp/Teaching/E03/OOP/handouts/io.pdf" target="_blank" rel="external">http://people.cs.aau.dk/~torp/Teaching/E03/OOP/handouts/io.pdf</a></p>
+<p>oracle官网<br><a href="http://docs.oracle.com/javase/tutorial/essential/io/streams.html" target="_blank" rel="external">http://docs.oracle.com/javase/tutorial/essential/io/streams.html</a></p>
+<p>花1K内存实现高效I/O的RandomAccessFile类<br><a href="https://www.ibm.com/developerworks/cn/java/l-javaio/" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/java/l-javaio/</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JAVA/" rel="tag">#JAVA</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/25/内存泄漏问题排查（上）/" rel="next" title="内存泄漏问题排查（上）">
+                <i class="fa fa-chevron-left"></i> 内存泄漏问题排查（上）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Gordon Rawe" />
+          <p class="site-author-name" itemprop="name">Gordon Rawe</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法论"><span class="nav-number">2.</span> <span class="nav-text">方法论</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#装饰者模式"><span class="nav-number">3.</span> <span class="nav-text">装饰者模式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#装饰者模式的作用"><span class="nav-number">3.1.</span> <span class="nav-text">装饰者模式的作用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#什么是装饰者模式"><span class="nav-number">3.2.</span> <span class="nav-text">什么是装饰者模式</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IO基本概念"><span class="nav-number">4.</span> <span class="nav-text">IO基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#流"><span class="nav-number">4.1.</span> <span class="nav-text">流</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#字节与字符"><span class="nav-number">4.2.</span> <span class="nav-text">字节与字符</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#字节流与字符流"><span class="nav-number">4.3.</span> <span class="nav-text">字节流与字符流</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IO包如何使用装饰者模式组织管理类"><span class="nav-number">5.</span> <span class="nav-text">IO包如何使用装饰者模式组织管理类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#核心接口和类的用法和注意点"><span class="nav-number">6.</span> <span class="nav-text">核心接口和类的用法和注意点</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#InputStream"><span class="nav-number">6.1.</span> <span class="nav-text">InputStream</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#OutputStream"><span class="nav-number">6.2.</span> <span class="nav-text">OutputStream</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Reader和Writer"><span class="nav-number">6.3.</span> <span class="nav-text">Reader和Writer</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#核心类"><span class="nav-number">7.</span> <span class="nav-text">核心类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#InputStream族"><span class="nav-number">7.1.</span> <span class="nav-text">InputStream族</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#OutputStream族"><span class="nav-number">7.2.</span> <span class="nav-text">OutputStream族</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Reader族"><span class="nav-number">7.3.</span> <span class="nav-text">Reader族</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Writer族"><span class="nav-number">7.4.</span> <span class="nav-text">Writer族</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#核心类的使用方法"><span class="nav-number">7.5.</span> <span class="nav-text">核心类的使用方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常见的关于IO的问答"><span class="nav-number">8.</span> <span class="nav-text">常见的关于IO的问答</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#使用缓冲流如何提高效率？"><span class="nav-number">8.1.</span> <span class="nav-text">使用缓冲流如何提高效率？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Buffered系列的字符流和字节流怎么就提高效率了？"><span class="nav-number">8.2.</span> <span class="nav-text">Buffered系列的字符流和字节流怎么就提高效率了？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#那么全能选手RandomAccessFile效果如何呢？"><span class="nav-number">8.3.</span> <span class="nav-text">那么全能选手RandomAccessFile效果如何呢？</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">9.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#参考资料"><span class="nav-number">9.1.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  &copy; Copyright All rights are reserved by 
+  <a href="https://github.com/gordon-rawe"><span class="author" itemprop="copyrightHolder">Gordon Rawe</span></a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
